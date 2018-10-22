@@ -132,7 +132,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @RequestMapping("one/{id}")
+    @GetMapping("one/{id}")
     public ResponseStatusVO getById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
@@ -164,7 +164,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @RequestMapping("pager-cond")
+    @PostMapping("pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         PagerVO pagerVO = new PagerVO();
