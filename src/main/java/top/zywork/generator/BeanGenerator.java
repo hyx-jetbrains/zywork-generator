@@ -196,7 +196,7 @@ public class BeanGenerator {
                                     + StringUtils.capitalize(columnDetail.getFieldName());
                             String javaType = columnDetail.getJavaTypeName();
                             String comment = columnDetail.getComment();
-                            fields.append(field(id, comment, javaType, field, columnDetail.getNullable(), columnDetail.getColumnSize(), null));
+                            fields.append(field(id, comment, javaType, field, columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
                         }
                     }
                 }
