@@ -38,8 +38,8 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
 
     private {zywork.beanName}{zywork.serviceSuffix} {zywork.beanNameLowerCase}{zywork.serviceSuffix};
 
-    @GetMapping("one")
-    public ResponseStatusVO getById(@RequestBody Long id) {
+    @GetMapping("one/{id}")
+    public ResponseStatusVO getById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
         try {

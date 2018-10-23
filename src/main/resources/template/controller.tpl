@@ -72,8 +72,8 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @GetMapping("remove")
-    public ResponseStatusVO removeById(@RequestBody Long id) {
+    @GetMapping("remove/{id}")
+    public ResponseStatusVO removeById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
             {zywork.beanNameLowerCase}{zywork.serviceSuffix}.removeById(id);
@@ -132,8 +132,8 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @GetMapping("one")
-    public ResponseStatusVO getById(@RequestBody Long id) {
+    @GetMapping("one/{id}")
+    public ResponseStatusVO getById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
         try {
