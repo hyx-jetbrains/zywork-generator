@@ -61,6 +61,32 @@ public class BeanGenerator {
     }
 
     /**
+     * 生成关联表的实体类
+     * @param beanName 实体类名称
+     * @param generator Generator对象
+     * @param primaryTable 主体表名称
+     * @param columns 所有选择的表字段
+     * @param tableColumnsList 所有表信息
+     */
+    public static void generateJoinBean(String beanName, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnsList, String beanType) {
+        String packagePath = beanPackage(generator, beanType);
+        String fileContent = fileContent(generator, beanType);
+        String beanSuffix = beanSuffix(generator, beanType);
+        fileContent = fileContent.replace(TemplateConstants.CREATE_DATE,
+                DateFormatUtils.format(Calendar.getInstance(), DatePatternEnum.DATE.getValue()))
+                .replace(TemplateConstants.AUTHOR, generator.getAuthor())
+                .replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.CLASS_SUFFIX, beanSuffix)
+                .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
+        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, beanType);
+        fileContent = generatorJoinConstructorParams(fileContent);
+        fileContent = generatorJoinConstructor(fileContent);
+        fileContent = generateJoinGetterSetters(fileContent);
+        fileContent = generateJoinToString(fileContent);
+        GeneratorUtils.writeFile(fileContent, packagePath, beanName + beanSuffix + ".java");
+    }
+
+    /**
      * 根据bean类型产生不同的package
      * @param generator
      * @param beanType
@@ -106,106 +132,6 @@ public class BeanGenerator {
             case QUERY_BEAN: return generator.getQuerySuffix();
             default: return "";
         }
-    }
-    /**
-     * 生成关联表DO
-     *
-     * @param beanName         bean名称
-     * @param generator        Generator实例
-     * @param primaryTable     主表名称
-     * @param columns          所选的字段
-     * @param tableColumnsList 所有表字段信息列表
-     */
-    public static void generateJoinDO(String beanName, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnsList) {
-        String packagePath = GeneratorUtils.createPackage(generator, generator.getDoPackage());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.DO_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.CREATE_DATE,
-                DateFormatUtils.format(Calendar.getInstance(), DatePatternEnum.DATE.getValue()))
-                .replace(TemplateConstants.AUTHOR, generator.getAuthor())
-                .replace(TemplateConstants.BEAN_NAME, beanName)
-                .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
-        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, DO_BEAN);
-        fileContent = generatorJoinConstructorParams(fileContent);
-        fileContent = generatorJoinConstructor(fileContent);
-        fileContent = generateJoinGetterSetters(fileContent);
-        fileContent = generateJoinToString(fileContent);
-        GeneratorUtils.writeFile(fileContent, packagePath, beanName + generator.getDoSuffix());
-    }
-
-    /**
-     * 生成关联表DTO对象
-     *
-     * @param beanName         bean名称
-     * @param generator        Generator实例
-     * @param primaryTable     主表名称
-     * @param columns          所选的字段
-     * @param tableColumnsList 所有表的字段信息列表
-     */
-    public static void generateJoinDTO(String beanName, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnsList) {
-        String packagePath = GeneratorUtils.createPackage(generator, generator.getDtoPackage());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.DTO_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.CREATE_DATE,
-                DateFormatUtils.format(Calendar.getInstance(), DatePatternEnum.DATE.getValue()))
-                .replace(TemplateConstants.AUTHOR, generator.getAuthor())
-                .replace(TemplateConstants.BEAN_NAME, beanName)
-                .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
-        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, DTO_BEAN);
-        fileContent = generatorJoinConstructorParams(fileContent);
-        fileContent = generatorJoinConstructor(fileContent);
-        fileContent = generateJoinGetterSetters(fileContent);
-        fileContent = generateJoinToString(fileContent);
-        GeneratorUtils.writeFile(fileContent, packagePath, beanName + generator.getDtoSuffix());
-    }
-
-    /**
-     * 生成关联表的VO对象
-     *
-     * @param beanName         bean名称
-     * @param generator        Generator实例
-     * @param primaryTable     主表名称
-     * @param columns          所选的字段
-     * @param tableColumnsList 所有表字段信息列表
-     */
-    public static void generateJoinVO(String beanName, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnsList) {
-        String packagePath = GeneratorUtils.createPackage(generator, generator.getVoPackage());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VO_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.CREATE_DATE,
-                DateFormatUtils.format(Calendar.getInstance(), DatePatternEnum.DATE.getValue()))
-                .replace(TemplateConstants.AUTHOR, generator.getAuthor())
-                .replace(TemplateConstants.BEAN_NAME, beanName)
-                .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
-        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, VO_BEAN);
-        fileContent = generatorJoinConstructorParams(fileContent);
-        fileContent = generatorJoinConstructor(fileContent);
-        fileContent = generateJoinGetterSetters(fileContent);
-        fileContent = generateJoinToString(fileContent);
-        GeneratorUtils.writeFile(fileContent, packagePath, beanName + generator.getVoSuffix());
-    }
-
-    /**
-     * 生成关联表的Query对象
-     *
-     * @param beanName         bean名称
-     * @param generator        Generator实例
-     * @param primaryTable     主表名称
-     * @param columns          所选的字段
-     * @param tableColumnsList 所有表字段信息的列表
-     */
-    public static void generateJoinQuery(String beanName, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnsList) {
-        String packagePath = GeneratorUtils.createPackage(generator, generator.getQueryPackage());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.QUERY_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.CREATE_DATE,
-                DateFormatUtils.format(Calendar.getInstance(), DatePatternEnum.DATE.getValue()))
-                .replace(TemplateConstants.AUTHOR, generator.getAuthor())
-                .replace(TemplateConstants.BEAN_NAME, beanName)
-                .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
-        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, QUERY_BEAN);
-        fileContent = generatorJoinConstructorParams(fileContent);
-        fileContent = generatorJoinConstructor(fileContent);
-        fileContent = generateJoinGetterSetters(fileContent);
-        fileContent = generateJoinToString(fileContent);
-        fileContent = fileContent.replace(TemplateConstants.TO_STRING, "");
-        GeneratorUtils.writeFile(fileContent, packagePath, beanName + generator.getQuerySuffix());
     }
 
     /**
