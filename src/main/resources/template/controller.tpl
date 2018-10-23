@@ -72,7 +72,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("remove")
+    @GetMapping("remove")
     public ResponseStatusVO removeById(@RequestBody Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -132,7 +132,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("one")
+    @GetMapping("one")
     public ResponseStatusVO getById(@RequestBody Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
