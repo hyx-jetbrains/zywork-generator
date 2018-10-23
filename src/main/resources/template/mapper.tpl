@@ -5,7 +5,7 @@
 <mapper namespace="top.zywork.dao.{zywork.beanName}{zywork.daoSuffix}">
 
     <insert id="save" parameterType="{zywork.beanNameLowerCase}{zywork.doSuffix}">
-        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+        <selectKey resultType="java.lang.{zywork.idType}" order="AFTER" keyProperty="id">
     		SELECT LAST_INSERT_ID()
     	</selectKey>
         insert into {zywork.tableName}

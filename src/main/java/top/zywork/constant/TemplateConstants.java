@@ -78,6 +78,8 @@ public class TemplateConstants {
 
     public static final String TABLE_NAME = "{zywork.tableName}";
 
+    public static final String ID_TYPE = "{zywork.idType}";
+
     public static final String INSERT_COLUMNS = "{zywork.insertColumns}";
 
     public static final String INSERT_VALUES = "{zywork.insertValues}";

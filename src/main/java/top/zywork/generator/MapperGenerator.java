@@ -21,6 +21,8 @@ import java.util.List;
  */
 public class MapperGenerator {
 
+    private static final String ID_FIELD = "id";
+
     /**
      * 生成Mapper映射xml文件
      * @param generator
@@ -34,7 +36,8 @@ public class MapperGenerator {
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, StringUtils.uncapitalize(beanName))
                 .replace(TemplateConstants.DAO_SUFFIX, generator.getDaoSuffix())
                 .replace(TemplateConstants.DO_SUFFIX, generator.getDoSuffix())
-                .replace(TemplateConstants.TABLE_NAME, tableColumn.getTableName());
+                .replace(TemplateConstants.TABLE_NAME, tableColumn.getTableName())
+                .replace(TemplateConstants.ID_TYPE, getIdType(tableColumn));
         fileContent = generateInsertColumns(fileContent, tableColumn, false);
         fileContent = generateInsertColumns(fileContent, tableColumn, true);
         fileContent = generateInsertValues(fileContent, tableColumn, false);
@@ -77,6 +80,16 @@ public class MapperGenerator {
         GeneratorUtils.writeFile(fileContent, resDir, beanName + generator.getMapperSuffix() + ".xml");
     }
 
+    private static String getIdType(TableColumn tableColumn) {
+        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        for (ColumnDetail columnDetail : columnDetailList) {
+            if (ID_FIELD.equals(columnDetail.getName())) {
+                return columnDetail.getJavaTypeName();
+            }
+        }
+        return "Long";
+    }
+
     /**
      * 生成Mapper映射文件insert语句中的column部分
      * @param fileContent 文件内容
@@ -88,7 +101,7 @@ public class MapperGenerator {
         List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
         StringBuilder insertColumns = new StringBuilder("");
         for (ColumnDetail columnDetail : columnDetails) {
-            if (!columnDetail.getName().equals("id")) {
+            if (!ID_FIELD.equals(columnDetail.getName())) {
                 insertColumns.append(insertColumn(columnDetail.getFieldName(), columnDetail.getName(), isBatch));
             }
         }
@@ -125,7 +138,7 @@ public class MapperGenerator {
         List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
         StringBuilder insertValues = new StringBuilder("");
         for (ColumnDetail columnDetail : columnDetails) {
-            if (!columnDetail.getName().equals("id")) {
+            if (!ID_FIELD.equals(columnDetail.getName())) {
                 insertValues.append(insertValue(columnDetail.getFieldName(), isBatch));
             }
         }
@@ -168,7 +181,7 @@ public class MapperGenerator {
         StringBuilder setClause = new StringBuilder("");
         for (ColumnDetail columnDetail : columnDetails) {
             String column = columnDetail.getName();
-            if (!column.equals("id")) {
+            if (!ID_FIELD.equals(column)) {
                 setClause.append(setValue(columnDetail.getFieldName(), column, isBatch));
             }
         }
