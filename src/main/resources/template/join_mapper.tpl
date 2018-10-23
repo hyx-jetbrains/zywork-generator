@@ -38,10 +38,10 @@
             <include refid="query_where_clause"/>
         </where>
         order by
-        <if test="query.sort != null and query.sort != ''">
-            ${query.sort} ${query.order}
+        <if test="query.sortColumn != null and query.sortColumn != ''">
+            ${query.sortColumn} ${query.sortOrder}
         </if>
-        <if test="query.sort == null or query.sort == ''">
+        <if test="query.sortColumn == null or query.sortColumn == ''">
             {zywork.primaryTable}.update_time desc, {zywork.primaryTable}.create_time desc
         </if>
         limit #{query.beginIndex}, #{query.pageSize}
