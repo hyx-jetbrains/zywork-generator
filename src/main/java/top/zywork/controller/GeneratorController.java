@@ -59,7 +59,7 @@ public class GeneratorController {
         Generator generator = (Generator) servletContext.getAttribute("generator");
         String dir = generator.getSaveBaseDir() + File.separator + generator.getJavaSrcDir() + File.separator
                 + generator.getBasePackage().replace(".", File.separator) + File.separator + generator.getDoPackage();
-        String fileName = joinInfo.getBeanName() + generator.getDoSuffix();
+        String fileName = joinInfo.getBeanName() + generator.getDoSuffix() + ".java";
         ResponseStatusVO statusVO = new ResponseStatusVO();
         if (FileUtils.exist(dir, fileName)) {
             statusVO.errorStatus(500, "已经存在指定名称的实体类，请重新填写实体类名称后再生成代码", null);
