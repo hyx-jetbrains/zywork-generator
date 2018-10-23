@@ -294,11 +294,11 @@ public class BeanGenerator {
     private static String field(String idField, String title, String javaType, String fieldName, int nullable, int columnSize, String beanType) {
         fieldDetailList.add(new FieldDetail(fieldName, javaType, title));
         if (DO_BEAN.equals(beanType) || DTO_BEAN.equals(beanType)) {
-            return normalField(idField, title, javaType, fieldName);
+            return normalField(title, javaType, fieldName);
         } else if (VO_BEAN.equals(beanType)) {
             return voField(idField, title, javaType, fieldName, nullable, columnSize);
         } else if (QUERY_BEAN.equals(beanType)) {
-            return queryField(idField, title, javaType, fieldName);
+            return queryField(title, javaType, fieldName);
         }
         return "";
     }
@@ -306,13 +306,12 @@ public class BeanGenerator {
     /**
      * 生成do对象和dto对象属性，不需要增加数据验证等
      *
-     * @param idField   id属性名
      * @param title     属性中文名
      * @param javaType  java类型
      * @param fieldName 属性英文名
      * @return
      */
-    private static String normalField(String idField, String title, String javaType, String fieldName) {
+    private static String normalField(String title, String javaType, String fieldName) {
         StringBuilder field = new StringBuilder();
         field.append("// ")
                 .append(title)
@@ -381,13 +380,12 @@ public class BeanGenerator {
     /**
      * 生成query对象属性，对非字符串的数据类型，需要添加范围搜索
      *
-     * @param idField   id属性名
      * @param title     属性中文名
      * @param javaType  java类型
      * @param fieldName 属性英文名
      * @return
      */
-    private static String queryField(String idField, String title, String javaType, String fieldName) {
+    private static String queryField(String title, String javaType, String fieldName) {
         StringBuilder field = new StringBuilder();
         field.append("// ")
                 .append(title)
@@ -401,7 +399,7 @@ public class BeanGenerator {
                 .append(" ")
                 .append(fieldName)
                 .append(";\n\t");
-        if (!javaType.equals("String") && !fieldName.equals(idField)) {
+        if (!javaType.equals("String")) {
             fieldDetailList.add(new FieldDetail(fieldName + "Min", javaType, title + "（最小值）"));
             fieldDetailList.add(new FieldDetail(fieldName + "Max", javaType, title + "（最大值）"));
             field.append("// ")
