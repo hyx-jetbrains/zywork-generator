@@ -36,6 +36,8 @@ public class TemplateConstants {
 
     public static final String VIEW_TEMPLATE = "view.tpl";
 
+    public static final String JOIN_VIEW_TEMPLATE = "join_view.tpl";
+
     public static final String BEAN_NAME = "{zywork.beanName}";
 
     public static final String CLASS_SUFFIX = "{zywork.suffix}";

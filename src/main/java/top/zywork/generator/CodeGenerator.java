@@ -82,7 +82,7 @@ public class CodeGenerator {
             ControllerGenerator.generateJoinController(beanName, mappingUrl, generator);
         }
 
-        // ViewGenerator.generateJoinView(beanName, mappingUrl, generator, primaryTable, columns, tableColumnList);
+        ViewGenerator.generateJoinView(beanName, mappingUrl, generator, primaryTable, columns, tableColumnList);
     }
 
 }

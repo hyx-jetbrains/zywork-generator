@@ -29,8 +29,9 @@ public class ColumnDetail {
 
     public ColumnDetail() {}
 
-    public ColumnDetail(String name, String comment, Integer type, String jdbcTypeName, String javaTypeName, Integer columnSize, Integer nullable) {
+    public ColumnDetail(String name, String fieldName, String comment, Integer type, String jdbcTypeName, String javaTypeName, Integer columnSize, Integer nullable) {
         this.name = name;
+        this.fieldName = fieldName;
         this.comment = comment;
         this.type = type;
         this.jdbcTypeName = jdbcTypeName;
