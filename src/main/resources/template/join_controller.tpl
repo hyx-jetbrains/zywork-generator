@@ -38,16 +38,14 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
 
     private {zywork.beanName}{zywork.serviceSuffix} {zywork.beanNameLowerCase}{zywork.serviceSuffix};
 
-    @GetMapping("one/{id}")
-    public ResponseStatusVO getById(@PathVariable("id") Long id) {
+    @GetMapping("multi/{id}")
+    public ResponseStatusVO listById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
         try {
-            Object obj = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.getById(id);
-            if (obj != null) {
-                {zywork.beanNameLowerCase}{zywork.voSuffix} = BeanUtils.copy(obj, {zywork.beanName}{zywork.voSuffix}.class);
-            }
-            statusVO.okStatus(200, "查询成功", {zywork.beanNameLowerCase}{zywork.voSuffix});
+            List<Object> objectList = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listById(id);
+            {zywork.beanNameLowerCase}VOList =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
+            statusVO.okStatus(200, "查询成功", {zywork.beanNameLowerCase}VOList);
         } catch (ServiceException e) {
             logger.error("返回单个对象JSON数据失败：{}", e.getMessage());
             statusVO.errorStatus(500, "查询失败", null);
