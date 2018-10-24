@@ -14,7 +14,7 @@
         {zywork.joinWhereClause}
     </sql>
 
-    <select id="getById" parameterType="long" resultType="{zywork.beanNameLowerCase}{zywork.doSuffix}">
+    <select id="listById" parameterType="long" resultType="{zywork.beanNameLowerCase}{zywork.doSuffix}">
         select
         <include refid="select_columns"/>
         from {zywork.tableName} where {zywork.primaryTable}.id = #{id} and
