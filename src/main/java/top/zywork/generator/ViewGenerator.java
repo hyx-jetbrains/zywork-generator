@@ -56,10 +56,12 @@ public class ViewGenerator {
         String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_VIEW_TEMPLATE);
         TableColumn tableColumn = columnsToTableColumn(generator, primaryTable, columns, tableColumnList);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
+        fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumn))
+                .replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
                 .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName)
                 .replace(TemplateConstants.MAPPING_URL, mappingUrl)
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
                 .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
@@ -130,7 +132,7 @@ public class ViewGenerator {
                         .append(fieldName)
                         .append("\">")
                         .append("\n\t<Input v-model=\"")
-                        .append("form.")
+                        .append("searchForm.")
                         .append(fieldName)
                         .append("\"/>");
             } else {
@@ -145,7 +147,7 @@ public class ViewGenerator {
                             .append("Min")
                             .append("\">")
                             .append("\n\t<DatePicker v-model=\"")
-                            .append("form.")
+                            .append("searchForm.")
                             .append(fieldName)
                             .append("Min")
                             .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm\" style=\"width: 100%;\">")
@@ -159,7 +161,7 @@ public class ViewGenerator {
                             .append("Max")
                             .append("\">")
                             .append("\n\t<DatePicker v-model=\"")
-                            .append("form.")
+                            .append("searchForm.")
                             .append(fieldName)
                             .append("Max")
                             .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm\" style=\"width: 100%;\">")
@@ -178,7 +180,7 @@ public class ViewGenerator {
                             .append("Min")
                             .append("\">")
                             .append("\n\t<Input v-model=\"")
-                            .append("form.")
+                            .append("searchForm.")
                             .append(fieldName)
                             .append("Min")
                             .append("\"/>")
@@ -191,7 +193,7 @@ public class ViewGenerator {
                             .append("Max")
                             .append("\">")
                             .append("\n\t<Input v-model=\"")
-                            .append("form.")
+                            .append("searchForm.")
                             .append(fieldName)
                             .append("Max")
                             .append("\"/>")
