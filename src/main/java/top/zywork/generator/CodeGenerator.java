@@ -58,7 +58,7 @@ public class CodeGenerator {
      * @param columns 所选表字段
      * @param joinWhereClause 关联条件
      */
-    public static void generateJoinCode(String beanName, String mappingUrl, Generator generator, String primaryTable,
+    public static void generateJoinCode(String beanName, String mappingUrl, Generator generator, String[] tables, String primaryTable,
                                         String[] columns, List<TableColumn> tableColumnList, String joinWhereClause, String[] codeTypes) {
         if (StringUtils.isInArray(codeTypes, "bean")) {
             BeanGenerator.generateJoinBean(beanName, generator, primaryTable, columns, tableColumnList, BeanGenerator.DO_BEAN);
@@ -71,7 +71,7 @@ public class CodeGenerator {
             DAOGenerator.generateJoinDAO(beanName, generator);
         }
         if (StringUtils.isInArray(codeTypes, "mapper")) {
-            MapperGenerator.generateJoinMapper(beanName, generator, primaryTable, columns, joinWhereClause);
+            MapperGenerator.generateJoinMapper(beanName, generator, tables, primaryTable, columns, joinWhereClause);
         }
 
         if (StringUtils.isInArray(codeTypes, "service")) {

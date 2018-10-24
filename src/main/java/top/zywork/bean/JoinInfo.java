@@ -11,6 +11,7 @@ package top.zywork.bean;
 public class JoinInfo {
     private String beanName;
     private String requestMapping;
+    private String[] tables;
     private String primaryTable;
     private String whereClause;
     private String[] columns;
@@ -30,6 +31,14 @@ public class JoinInfo {
 
     public void setRequestMapping(String requestMapping) {
         this.requestMapping = requestMapping;
+    }
+
+    public String[] getTables() {
+        return tables;
+    }
+
+    public void setTables(String[] tables) {
+        this.tables = tables;
     }
 
     public String getPrimaryTable() {

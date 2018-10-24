@@ -57,14 +57,10 @@ public class MapperGenerator {
      * @param columns 所选的字段
      * @param joinWhereClause 关联条件
      */
-    public static void generateJoinMapper(String beanName, Generator generator, String primaryTable, String[] columns, String joinWhereClause) {
+    public static void generateJoinMapper(String beanName, Generator generator, String[] tables, String primaryTable, String[] columns, String joinWhereClause) {
         StringBuilder tableName = new StringBuilder();
-        for (String column : columns) {
-            String table = column.split("-")[0];
-            // user与user_social，如果不变成[user]和[user_social]，则无法正确获取到所有的表名称
-            if (!tableName.toString().contains("[" + table + "]")) {
-                tableName.append(", [").append(table).append("]");
-            }
+        for (String table : tables) {
+            tableName.append(", ").append(table);
         }
         String resDir = GeneratorUtils.createResDir(generator, generator.getMapperDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_MAPPER_TEMPLATE);
@@ -72,7 +68,7 @@ public class MapperGenerator {
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, StringUtils.uncapitalize(beanName))
                 .replace(TemplateConstants.DAO_SUFFIX, generator.getDaoSuffix())
                 .replace(TemplateConstants.DO_SUFFIX, generator.getDoSuffix())
-                .replace(TemplateConstants.TABLE_NAME, tableName.toString().substring(2).replace("[", "").replace("]", ""))
+                .replace(TemplateConstants.TABLE_NAME, tableName.toString().substring(2))
                 .replace(TemplateConstants.PRIMARY_TABLE, primaryTable);
         fileContent = generateJoinSelectColumns(fileContent, generator, columns);
         fileContent = generateJoinQueryWhereClause(generator, fileContent, columns);

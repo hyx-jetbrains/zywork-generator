@@ -65,7 +65,8 @@ public class GeneratorController {
             statusVO.errorStatus(500, "已经存在指定名称的实体类，请重新填写实体类名称后再生成代码", null);
         } else {
             List<TableColumn> tableColumnList = (List<TableColumn>) servletContext.getAttribute("tableColumnList");
-            CodeGenerator.generateJoinCode(joinInfo.getBeanName(), joinInfo.getRequestMapping(), generator, joinInfo.getPrimaryTable(), joinInfo.getColumns(), tableColumnList, joinInfo.getWhereClause(), joinInfo.getCodeTypes());
+            CodeGenerator.generateJoinCode(joinInfo.getBeanName(), joinInfo.getRequestMapping(), generator, joinInfo.getTables(),
+                    joinInfo.getPrimaryTable(), joinInfo.getColumns(), tableColumnList, joinInfo.getWhereClause(), joinInfo.getCodeTypes());
             statusVO.okStatus(200, "成功生成所选关联表的代码！", null);
         }
         return statusVO;
