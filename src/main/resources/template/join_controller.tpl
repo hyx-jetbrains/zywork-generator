@@ -41,7 +41,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
     @GetMapping("multi/{id}")
     public ResponseStatusVO listById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
-        {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
+        List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List = new ArrayList<>();
         try {
             List<Object> objectList = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listById(id);
             {zywork.beanNameLowerCase}VOList =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
