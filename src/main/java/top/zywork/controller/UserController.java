@@ -36,7 +36,7 @@ public class UserController extends BaseController {
             for (int i = 0; i < 10; i++) {
                 UserVO userVO = new UserVO();
                 userVO.setId((long) i + 1);
-                userVO.setAccountName("testhhhhhhhhhhhhhhhhh");
+                userVO.setAccountName("user" + (i + 1));
                 userVO.setIsActive((byte) 0);
                 userVOList.add(userVO);
             }

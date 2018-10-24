@@ -235,12 +235,12 @@ public class ViewGenerator {
                 if (columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls) {
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
-                            .append("\n{required: true, message: '此项为必须项', trigger: 'blur'},")
+                            .append("\n{required: true, message: '此项为必须项'},")
                             .append("\n{type: 'string', min: 1, max: ")
                             .append(columnDetail.getColumnSize())
                             .append(", message: '必须1-")
                             .append(columnDetail.getColumnSize())
-                            .append("个字符', trigger: 'blur'}\n],\n");
+                            .append("个字符'}\n],\n");
                 } else if (columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNullable) {
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
@@ -248,11 +248,11 @@ public class ViewGenerator {
                             .append(columnDetail.getColumnSize())
                             .append(", message: '必须1-")
                             .append(columnDetail.getColumnSize())
-                            .append("个字符', trigger: 'blur'}\n],\n");
-                } else {
+                            .append("个字符'}\n],\n");
+                } else if (!columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
-                            .append("\n{required: true, message: '此项为必须项', trigger: 'blur'}\n],\n");
+                            .append("\n{required: true, message: '此项为必须项'}\n],\n");
                 }
             }
         }
