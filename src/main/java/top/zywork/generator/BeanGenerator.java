@@ -55,7 +55,7 @@ public class BeanGenerator {
         fileContent = generateFields(fileContent, tableColumn, beanType);
         fileContent = generatorConstructorParams(fileContent);
         fileContent = generatorConstructor(fileContent);
-        fileContent = generateGetterSetters(fileContent, beanType);
+        fileContent = generateGetterSetters(fileContent);
         fileContent = generateToString(fileContent);
         GeneratorUtils.writeFile(fileContent, packagePath, beanName + beanSuffix + ".java");
     }
@@ -81,7 +81,7 @@ public class BeanGenerator {
         fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, beanType);
         fileContent = generatorJoinConstructorParams(fileContent);
         fileContent = generatorJoinConstructor(fileContent);
-        fileContent = generateJoinGetterSetters(fileContent, beanType);
+        fileContent = generateJoinGetterSetters(fileContent);
         fileContent = generateJoinToString(fileContent);
         GeneratorUtils.writeFile(fileContent, packagePath, beanName + beanSuffix + ".java");
     }
@@ -283,9 +283,16 @@ public class BeanGenerator {
                         .append(", message = \"必须小于")
                         .append(columnSize)
                         .append("个字符\")\n");
-            } else if (!javaType.equals("String") && nullable == DatabaseMetaData.columnNoNulls) {
-                // 其他类型（非字符串类型），且不能为空
+            } else if (!javaType.equals("String") && !javaType.equals("Date") && nullable == DatabaseMetaData.columnNoNulls) {
+                // 其他非字符串及时间类型且不能为空
                 field.append("\t@NotNull(message = \"此项是必须项\")\n");
+            } else if (javaType.equals("Date") && nullable == DatabaseMetaData.columnNoNulls) {
+                // 时间类型，且不能为空
+                field.append("\t@NotNull(message = \"此项是必须项\")\n")
+                        .append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
+            } else if (javaType.equals("Date") && nullable == DatabaseMetaData.columnNullable) {
+                // 时间类型，能为空
+                field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             }
         }
         field.append("\tprivate ")
@@ -308,8 +315,12 @@ public class BeanGenerator {
         StringBuilder field = new StringBuilder();
         field.append("// ")
                 .append(title)
-                .append("\n")
-                .append("\tprivate ")
+                .append("\n");
+        if (javaType.equals("Date")) {
+            // 把接收的字符串时间转化成Date
+            field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
+        }
+        field.append("\tprivate ")
                 .append(javaType)
                 .append(" ")
                 .append(fieldName)
@@ -320,18 +331,24 @@ public class BeanGenerator {
             field.append("// ")
                     .append(title)
                     .append("（最小值）")
-                    .append("\n")
-                    .append("\tprivate ")
+                    .append("\n");
+            if (javaType.equals("Date")) {
+                field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
+            }
+            field.append("\tprivate ")
                     .append(javaType)
                     .append(" ")
                     .append(fieldName)
                     .append("Min")
-                    .append(";\n\t")
-                    .append("// ")
+                    .append(";\n\t");
+            field.append("// ")
                     .append(title)
                     .append("（最大值）")
-                    .append("\n")
-                    .append("\tprivate ")
+                    .append("\n");
+            if (javaType.equals("Date")) {
+                field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
+            }
+            field.append("\tprivate ")
                     .append(javaType)
                     .append(" ")
                     .append(fieldName)
@@ -401,18 +418,14 @@ public class BeanGenerator {
      * 生成所有属性的getter/setter方法
      *
      * @param fileContent 文件内容
-     * @param beanType 类型
      * @return 添加了所有属性的getter/setter方法的文件内容
      */
-    private static String generateGetterSetters(String fileContent, String beanType) {
+    private static String generateGetterSetters(String fileContent) {
         StringBuilder getterSetters = new StringBuilder("");
         // 直接使用之前生成的所有属性列表fieldDetailList
         for (FieldDetail fieldDetail : fieldDetailList) {
             String field = fieldDetail.getName();
             String javaType = fieldDetail.getJavaType();
-            if (beanType.equals(VO_BEAN) && javaType.equals("Date")) {
-                getterSetters.append("@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
-            }
             getterSetters.append("public ")
                     .append(javaType)
                     .append(" ")
@@ -422,11 +435,8 @@ public class BeanGenerator {
                     .append("\t\treturn ")
                     .append(field)
                     .append(";\n")
-                    .append("\t}\n\n");
-            if ((beanType.equals(VO_BEAN) || beanType.equals(QUERY_BEAN)) && javaType.equals("Date")) {
-                getterSetters.append("\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")\n");
-            }
-            getterSetters.append("\tpublic void ")
+                    .append("\t}\n\n")
+                    .append("\tpublic void ")
                     .append(PropertyUtils.setter(field))
                     .append("(")
                     .append(javaType)
@@ -447,11 +457,10 @@ public class BeanGenerator {
      * 生成关联表对象的getter/setter
      *
      * @param fileContent 文件内容
-     * @param beanType 类型
      * @return
      */
-    private static String generateJoinGetterSetters(String fileContent, String beanType) {
-        return generateGetterSetters(fileContent, beanType);
+    private static String generateJoinGetterSetters(String fileContent) {
+        return generateGetterSetters(fileContent);
     }
 
     /**

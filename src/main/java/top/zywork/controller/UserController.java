@@ -2,9 +2,11 @@ package top.zywork.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import top.zywork.bean.UserVO;
+import top.zywork.common.BindingResultUtils;
 import top.zywork.common.DateUtils;
 import top.zywork.exception.ServiceException;
 import top.zywork.vo.PagerVO;
@@ -27,7 +29,23 @@ public class UserController extends BaseController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping("pager-cond")
+    @PostMapping("save")
+    public ResponseStatusVO save(@RequestBody @Validated UserVO userVO, BindingResult bindingResult) {
+        ResponseStatusVO statusVO = new ResponseStatusVO();
+        if (bindingResult.hasErrors()) {
+            statusVO.dataErrorStatus(500, BindingResultUtils.errorString(bindingResult), null);
+        } else {
+            try {
+                statusVO.okStatus(200, "添加成功", null);
+            } catch (ServiceException e) {
+                logger.error("添加失败：{}", e.getMessage());
+                statusVO.errorStatus(500, "添加失败", null);
+            }
+        }
+        return statusVO;
+    }
+
+    @PostMapping("pager-cond")
     public ResponseStatusVO listPageByCondition() {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         PagerVO pagerVO = new PagerVO();

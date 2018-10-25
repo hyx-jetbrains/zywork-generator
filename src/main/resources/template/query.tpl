@@ -3,7 +3,7 @@ package top.zywork.query;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * {zywork.beanName}{zywork.suffix}查询对象类<br/>
