@@ -40,12 +40,8 @@ public class UserVO extends BaseVO {
 	@Size(min = 0, max = 200, message = "必须小于200个字符")
 	private String salt;
 	// 创建时间
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
 	// 更新时间
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date updateTime;
 	// 是否激活
 	private Byte isActive;
@@ -113,18 +109,22 @@ public class UserVO extends BaseVO {
 		this.salt = salt;
 	}
 
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	public Date getCreateTime() {
 		return createTime;
 	}
 
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	public Date getUpdateTime() {
 		return updateTime;
 	}
 
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
