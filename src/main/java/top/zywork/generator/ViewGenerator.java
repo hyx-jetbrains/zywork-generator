@@ -39,7 +39,8 @@ public class ViewGenerator {
                 .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
                 .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumn))
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn))
+                .replace(TemplateConstants.FIT_COLUMNS, generateFitColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
     }
 
@@ -62,7 +63,8 @@ public class ViewGenerator {
                 .replace(TemplateConstants.MAPPING_URL, mappingUrl)
                 .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn))
+                .replace(TemplateConstants.FIT_COLUMNS, generateFitColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
     }
 
@@ -321,6 +323,22 @@ public class ViewGenerator {
                     .append("\nsortable: true\n},\n");
         }
         return tableColumns.toString();
+    }
+
+    /**
+     * 生成视图中需要重新设置列宽的列字段，默认为全部字段
+     * @param tableColumn 表字段信息
+     * @return
+     */
+    private static String generateFitColumns(TableColumn tableColumn) {
+        StringBuilder fitColumns = new StringBuilder();
+        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        for (ColumnDetail columnDetail : columnDetailList) {
+            fitColumns.append("'")
+                    .append(columnDetail.getFieldName())
+                    .append("',");
+        }
+        return fitColumns.toString();
     }
 
     /**

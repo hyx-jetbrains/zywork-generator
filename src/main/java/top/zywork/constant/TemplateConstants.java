@@ -121,5 +121,7 @@ public class TemplateConstants {
     // view视图中的表格字段
     public static final String TABLE_COLUMNS = "{zywork.tableColumns}";
 
+    public static final String FIT_COLUMNS = "{zywork.fitColumns}";
+
 
 }

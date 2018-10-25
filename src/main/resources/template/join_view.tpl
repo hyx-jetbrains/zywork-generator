@@ -7,7 +7,7 @@
           <Tooltip content="刷新" placement="right">
             <Button icon="md-refresh" type="success" shape="circle" @click="search"></Button>
           </Tooltip>
-          <Table stripe :loading="table.loading" :columns="table.tableColumns" :data="table.tableDetails" style="margin-top:20px;" @on-selection-change="changeSelection" @on-sort-change="changeSort"></Table>
+          <Table ref="dataTable" stripe :loading="table.loading" :columns="table.tableColumns" :data="table.tableDetails" style="margin-top:20px;" @on-selection-change="changeSelection" @on-sort-change="changeSort"></Table>
           <div style="margin: 20px;overflow: hidden">
             <div style="float: right;">
               <Page :total="page.total" :current="searchForm.pageNo" @on-change="changePageNo" @on-page-size-change="changePageSize" showSizer showTotal></Page>
@@ -116,6 +116,7 @@
     },
     computed: {},
     mounted() {
+      this.fitTable()
       this.search()
     },
     methods: {
@@ -159,6 +160,9 @@
       },
       changePageSize(pageSize) {
         utils.changePageSize(this, pageSize)
+      },
+      fitTable() {
+        utils.fitTable(this, 'dataTable', this.table.tableColumns, [{zywork.fitColumns}])
       }
     }
   }

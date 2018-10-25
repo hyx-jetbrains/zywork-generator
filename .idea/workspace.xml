@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35008691-3e97-426e-843f-d71334015066" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/template/join_view.tpl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/bean/ColumnDetail.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/bean/ColumnDetail.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/constant/TemplateConstants.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/constant/TemplateConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/generator/CodeGenerator.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/generator/CodeGenerator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/template/join_view.tpl" afterPath="$PROJECT_DIR$/src/main/resources/template/join_view.tpl" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/template/view.tpl" afterPath="$PROJECT_DIR$/src/main/resources/template/view.tpl" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -33,6 +32,7 @@
       <find>searchFormItems</find>
       <find>detailUrl</find>
       <find>columns</find>
+      <find>form.</find>
     </findStrings>
     <replaceStrings>
       <replace>&amp;</replace>
@@ -65,11 +65,12 @@
         <option value="$PROJECT_DIR$/src/main/resources/template/join_mapper.tpl" />
         <option value="$PROJECT_DIR$/src/main/resources/template/join_controller.tpl" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/controller/UserController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/top/zywork/constant/TemplateConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/template/join_view.tpl" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/generator/CodeGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/bean/ColumnDetail.java" />
+        <option value="$PROJECT_DIR$/src/main/java/top/zywork/constant/TemplateConstants.java" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/template/join_view.tpl" />
+        <option value="$PROJECT_DIR$/src/main/resources/template/view.tpl" />
       </list>
     </option>
   </component>
@@ -85,6 +86,12 @@
         <option name="importAutomatically" value="true" />
       </MavenImportingSettings>
     </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-13" />
+    <option name="y" value="23" />
+    <option name="width" value="2574" />
+    <option name="height" value="777" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -171,6 +178,15 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="zywork" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="zywork-generator" type="b2602c69:ProjectViewProjectNode" />
+              <item name="zywork-generator" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="zywork" type="462c0819:PsiDirectoryNode" />
+              <item name="constant" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="zywork-generator" type="b2602c69:ProjectViewProjectNode" />
@@ -331,12 +347,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540176234627</updated>
-      <workItem from="1540176236709" duration="32528000" />
+      <workItem from="1540176236709" duration="36464000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32528000" />
+    <option name="totallyTimeSpent" value="36464000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="777" extended-state="6" />
@@ -414,7 +430,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="13" />
+      <option name="time" value="14" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -635,22 +651,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/constant/TemplateConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="38" column="66" lean-forward="false" selection-start-line="38" selection-start-column="66" selection-end-line="38" selection-end-column="66" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/template/view.tpl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1196">
-          <caret line="86" column="19" lean-forward="false" selection-start-line="86" selection-start-column="10" selection-end-line="86" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/bean/TableColumn.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -675,14 +675,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/generator/CodeGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="482">
-          <caret line="84" column="70" lean-forward="false" selection-start-line="84" selection-start-column="70" selection-end-line="84" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/generator/MapperGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="724">
@@ -691,18 +683,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/generator/CodeGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="490">
+          <caret line="84" column="34" lean-forward="false" selection-start-line="84" selection-start-column="34" selection-end-line="84" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/constant/TemplateConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="123" column="67" lean-forward="false" selection-start-line="123" selection-start-column="67" selection-end-line="123" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="639">
-          <caret line="368" column="5" lean-forward="false" selection-start-line="368" selection-start-column="5" selection-end-line="368" selection-end-column="5" />
+        <state relative-caret-position="4935">
+          <caret line="338" column="34" lean-forward="false" selection-start-line="338" selection-start-column="34" selection-end-line="338" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/template/join_view.tpl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-698">
-          <caret line="51" column="47" lean-forward="false" selection-start-line="51" selection-start-column="47" selection-end-line="51" selection-end-column="47" />
+        <state relative-caret-position="-1907">
+          <caret line="9" column="31" lean-forward="false" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/template/view.tpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="31" lean-forward="false" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
           <folding />
         </state>
       </provider>
