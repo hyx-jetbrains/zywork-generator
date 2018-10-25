@@ -54,6 +54,9 @@
         page: {
           total: 0
         },
+        form: {
+          {zywork.formFields}
+        },
         searchForm: {
           pageNo: 1,
           pageSize: 10,

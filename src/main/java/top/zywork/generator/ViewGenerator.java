@@ -56,8 +56,7 @@ public class ViewGenerator {
         String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_VIEW_TEMPLATE);
         TableColumn tableColumn = columnsToTableColumn(generator, primaryTable, columns, tableColumnList);
-        fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumn))
-                .replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
+        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
                 .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName)
                 .replace(TemplateConstants.MAPPING_URL, mappingUrl)
