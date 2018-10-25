@@ -114,7 +114,7 @@ public class ViewGenerator {
                     .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm:ss\" style=\"width: 100%;\">")
                     .append("</DatePicker>");
         }
-        formItem.append("\n</FormItem>");
+        formItem.append("\n</FormItem>\n");
         return formItem.toString();
     }
 
