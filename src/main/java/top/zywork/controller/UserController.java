@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.zywork.bean.UserVO;
+import top.zywork.common.DateUtils;
 import top.zywork.exception.ServiceException;
 import top.zywork.vo.PagerVO;
 import top.zywork.vo.ResponseStatusVO;
@@ -37,6 +38,8 @@ public class UserController extends BaseController {
                 UserVO userVO = new UserVO();
                 userVO.setId((long) i + 1);
                 userVO.setAccountName("user" + (i + 1));
+                userVO.setCreateTime(DateUtils.currentDate());
+                System.out.println(DateUtils.currentDate());
                 userVO.setIsActive((byte) 0);
                 userVOList.add(userVO);
             }

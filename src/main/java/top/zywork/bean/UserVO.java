@@ -1,15 +1,12 @@
 package top.zywork.bean;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 import top.zywork.vo.BaseVO;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 /**
  * UserVO值对象类<br/>
@@ -20,7 +17,6 @@ import top.zywork.vo.BaseVO;
  * @version 1.0
  */
 
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class UserVO extends BaseVO {
 
     private static final long serialVersionUID = -9223372036307011640L;
@@ -45,9 +41,11 @@ public class UserVO extends BaseVO {
 	private String salt;
 	// 创建时间
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
 	// 更新时间
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date updateTime;
 	// 是否激活
 	private Byte isActive;

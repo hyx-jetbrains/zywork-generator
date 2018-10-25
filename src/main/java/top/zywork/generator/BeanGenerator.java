@@ -289,10 +289,12 @@ public class BeanGenerator {
             } else if (javaType.equals("Date") && nullable == DatabaseMetaData.columnNoNulls) {
                 // 时间类型，且不能为空
                 field.append("\t@NotNull(message = \"此项是必须项\")\n")
-                        .append("\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")\n");
+                        .append("\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")\n")
+                        .append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             } else if (javaType.equals("Date") && nullable == DatabaseMetaData.columnNullable) {
                 // 时间类型，能为空
-                field.append("\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")\n");
+                field.append("\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")\n")
+                        .append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             }
         }
         field.append("\tprivate ")
