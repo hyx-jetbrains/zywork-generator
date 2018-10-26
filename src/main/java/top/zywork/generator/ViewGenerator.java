@@ -172,7 +172,7 @@ public class ViewGenerator {
                             .append("</DatePicker>")
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
-                            .append("<i-col span=\"2\" style=\"text-align: center\">-</i-col>")
+                            .append("\n\t<i-col span=\"2\" style=\"text-align: center\">-</i-col>")
                             .append("\n\t<i-col span=\"11\">")
                             .append("\n\t<FormItem prop=\"")
                             .append(fieldName)
@@ -209,7 +209,7 @@ public class ViewGenerator {
                             .append("\" style=\"width: 100%;\"/>")
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
-                            .append("<i-col span=\"2\" style=\"text-align: center\">-</i-col>")
+                            .append("\n\t<i-col span=\"2\" style=\"text-align: center\">-</i-col>")
                             .append("\n\t<i-col span=\"11\">")
                             .append("\n\t<FormItem prop=\"")
                             .append(fieldName)
@@ -319,12 +319,12 @@ public class ViewGenerator {
                         && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
-                            .append("\n{type: 'integer', required: true, message: '此项为必须项', trigger: 'blur'}\n],\n");
+                            .append("\n{type: 'integer', required: true, message: '此项为必须项', trigger: 'blur, change'}\n],\n");
                 } else if (StringUtils.isInArray(new String[]{"BigDecimal", "Float", "Double"}, columnDetail.getJavaTypeName())
                         && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
-                            .append("\n{type: 'number', required: true, message: '此项为必须项', trigger: 'blur'}\n],\n");
+                            .append("\n{type: 'number', required: true, message: '此项为必须项', trigger: 'blur, change'}\n],\n");
                 }
             }
         }
