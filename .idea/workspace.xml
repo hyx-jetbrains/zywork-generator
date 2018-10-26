@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35008691-3e97-426e-843f-d71334015066" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/bean/UserVO.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/bean/UserVO.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/controller/UserController.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/controller/UserController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" afterPath="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -41,6 +39,7 @@
       <find>generateformfields</find>
       <find>generateformitems</find>
       <find>setClause</find>
+      <find>validaterules</find>
     </findStrings>
     <replaceStrings>
       <replace>&amp;</replace>
@@ -78,10 +77,10 @@
         <option value="$PROJECT_DIR$/src/main/resources/template/vo.tpl" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/generator/BeanGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/resources/template/query.tpl" />
-        <option value="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/bean/UserVO.java" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/controller/UserController.java" />
         <option value="$PROJECT_DIR$/src/main/java/top/zywork/generator/MapperGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java" />
       </list>
     </option>
   </component>
@@ -197,25 +196,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="zywork" type="462c0819:PsiDirectoryNode" />
-              <item name="bean" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zywork-generator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zywork-generator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="zywork" type="462c0819:PsiDirectoryNode" />
               <item name="common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="zywork-generator" type="b2602c69:ProjectViewProjectNode" />
-              <item name="zywork-generator" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="zywork" type="462c0819:PsiDirectoryNode" />
-              <item name="controller" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="zywork-generator" type="b2602c69:ProjectViewProjectNode" />
@@ -379,12 +360,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540176234627</updated>
-      <workItem from="1540176236709" duration="55448000" />
+      <workItem from="1540176236709" duration="58947000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55448000" />
+    <option name="totallyTimeSpent" value="58947000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="777" extended-state="6" />
@@ -799,26 +780,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/template/mapper.tpl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-169">
-          <caret line="76" column="43" lean-forward="false" selection-start-line="76" selection-start-column="26" selection-end-line="76" selection-end-column="43" />
+        <state relative-caret-position="-873">
+          <caret line="14" column="63" lean-forward="true" selection-start-line="14" selection-start-column="63" selection-end-line="14" selection-end-column="63" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/common/JDBCUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="175" column="30" lean-forward="true" selection-start-line="175" selection-start-column="30" selection-end-line="175" selection-end-column="30" />
+        <state relative-caret-position="440">
+          <caret line="187" column="26" lean-forward="true" selection-start-line="187" selection-start-column="26" selection-end-line="187" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/template/mapper.tpl">
+    <entry file="file://$PROJECT_DIR$/src/main/java/top/zywork/generator/ViewGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-241">
-          <caret line="14" column="63" lean-forward="true" selection-start-line="14" selection-start-column="63" selection-end-line="14" selection-end-column="63" />
+        <state relative-caret-position="-3666">
+          <caret line="48" column="28" lean-forward="true" selection-start-line="48" selection-start-column="28" selection-end-line="48" selection-end-column="28" />
           <folding />
         </state>
       </provider>

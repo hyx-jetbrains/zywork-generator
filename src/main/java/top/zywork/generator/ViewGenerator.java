@@ -99,20 +99,29 @@ public class ViewGenerator {
                 .append("\" prop=\"")
                 .append(fieldName)
                 .append("\">");
-        if (!javaTypeName.equals("Date")) {
-            formItem.append("\n\t<Input v-model=\"")
-                    .append("form.")
-                    .append(fieldName)
-                    .append("\"/>");
-        } else {
-            formItem.append("\n\t<DatePicker @on-change=\"form.")
-                    .append(fieldName)
-                    .append("=$event\" ")
-                    .append(":value=\"")
-                    .append("form.")
-                    .append(fieldName)
-                    .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm:ss\" style=\"width: 100%;\">")
-                    .append("</DatePicker>");
+        switch (javaTypeName) {
+            case "String":
+                formItem.append("\n\t<Input v-model=\"")
+                        .append("form.")
+                        .append(fieldName)
+                        .append("\"/>");
+                break;
+            case "Date":
+                formItem.append("\n\t<DatePicker @on-change=\"form.")
+                        .append(fieldName)
+                        .append("=$event\" ")
+                        .append(":value=\"")
+                        .append("form.")
+                        .append(fieldName)
+                        .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm:ss\" style=\"width: 100%;\">")
+                        .append("</DatePicker>");
+                break;
+            default:
+                formItem.append("\n\t<InputNumber v-model=\"")
+                        .append("form.")
+                        .append(fieldName)
+                        .append("\" style=\"width: 100%;\"/>");
+                break;
         }
         formItem.append("\n</FormItem>\n");
         return formItem.toString();
@@ -129,18 +138,19 @@ public class ViewGenerator {
         for (ColumnDetail columnDetail : columnDetailList) {
             String fieldName = columnDetail.getFieldName();
             String javaType = columnDetail.getJavaTypeName();
-            if (javaType.equals("String")) {
-                formItems.append("<FormItem label=\"")
-                        .append(columnDetail.getComment())
-                        .append("\" prop=\"")
-                        .append(fieldName)
-                        .append("\">")
-                        .append("\n\t<Input v-model=\"")
-                        .append("searchForm.")
-                        .append(fieldName)
-                        .append("\"/>");
-            } else {
-                if (javaType.equals("Date")) {
+            switch (javaType) {
+                case "String":
+                    formItems.append("<FormItem label=\"")
+                            .append(columnDetail.getComment())
+                            .append("\" prop=\"")
+                            .append(fieldName)
+                            .append("\">")
+                            .append("\n\t<Input v-model=\"")
+                            .append("searchForm.")
+                            .append(fieldName)
+                            .append("\"/>");
+                    break;
+                case "Date":
                     formItems.append("<FormItem label=\"")
                             .append(columnDetail.getComment())
                             .append("\">")
@@ -181,7 +191,8 @@ public class ViewGenerator {
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
                             .append("\n</Row>");
-                } else {
+                    break;
+                default:
                     formItems.append("<FormItem label=\"")
                             .append(columnDetail.getComment())
                             .append("\">")
@@ -191,11 +202,11 @@ public class ViewGenerator {
                             .append(fieldName)
                             .append("Min")
                             .append("\">")
-                            .append("\n\t<Input v-model=\"")
+                            .append("\n\t<InputNumber v-model=\"")
                             .append("searchForm.")
                             .append(fieldName)
                             .append("Min")
-                            .append("\"/>")
+                            .append("\" style=\"width: 100%;\"/>")
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
                             .append("<i-col span=\"2\" style=\"text-align: center\">-</i-col>")
@@ -204,15 +215,15 @@ public class ViewGenerator {
                             .append(fieldName)
                             .append("Max")
                             .append("\">")
-                            .append("\n\t<Input v-model=\"")
+                            .append("\n\t<InputNumber v-model=\"")
                             .append("searchForm.")
                             .append(fieldName)
                             .append("Max")
-                            .append("\"/>")
+                            .append("\" style=\"width: 100%;\"/>")
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
                             .append("\n</Row>");
-                }
+                    break;
             }
             formItems.append("\n</FormItem>\n");
         }
@@ -248,7 +259,7 @@ public class ViewGenerator {
         List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
         for (ColumnDetail columnDetail : columnDetailList) {
             formFields.append(columnDetail.getFieldName())
-                    .append(": '',\n");
+                    .append(": null,\n");
         }
         return formFields.toString();
     }
@@ -263,14 +274,14 @@ public class ViewGenerator {
         List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
         for (ColumnDetail columnDetail : columnDetailList) {
             formFields.append(columnDetail.getFieldName())
-                    .append(": '',\n");
+                    .append(": null,\n");
             if (!columnDetail.getJavaTypeName().equals("String")) {
                 formFields.append(columnDetail.getFieldName())
                         .append("Min")
-                        .append(": '', \n")
+                        .append(": null, \n")
                         .append(columnDetail.getFieldName())
                         .append("Max")
-                        .append(": '', \n");
+                        .append(": null, \n");
             }
         }
         return formFields.toString();
@@ -290,12 +301,12 @@ public class ViewGenerator {
                 if (columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls) {
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
-                            .append("\n{required: true, message: '此项为必须项'},")
+                            .append("\n{type: 'string', required: true, message: '此项为必须项', trigger: 'blur'},")
                             .append("\n{type: 'string', min: 1, max: ")
                             .append(columnDetail.getColumnSize())
                             .append(", message: '必须1-")
                             .append(columnDetail.getColumnSize())
-                            .append("个字符'}\n],\n");
+                            .append("个字符', trigger: 'blur'}\n],\n");
                 } else if (columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNullable) {
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
@@ -303,11 +314,17 @@ public class ViewGenerator {
                             .append(columnDetail.getColumnSize())
                             .append(", message: '必须1-")
                             .append(columnDetail.getColumnSize())
-                            .append("个字符'}\n],\n");
-                } else if (!columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
+                            .append("个字符', trigger: 'blur'}\n],\n");
+                } else if (StringUtils.isInArray(new String[]{"Byte", "Short", "Integer", "Long"}, columnDetail.getJavaTypeName())
+                        && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
-                            .append("\n{required: true, message: '此项为必须项'}\n],\n");
+                            .append("\n{type: 'integer', required: true, message: '此项为必须项', trigger: 'blur'}\n],\n");
+                } else if (StringUtils.isInArray(new String[]{"BigDecimal", "Float", "Double"}, columnDetail.getJavaTypeName())
+                        && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
+                    validateRules.append(columnDetail.getFieldName())
+                            .append(": [")
+                            .append("\n{type: 'number', required: true, message: '此项为必须项', trigger: 'blur'}\n],\n");
                 }
             }
         }
