@@ -39,6 +39,9 @@ public class UserVO extends BaseVO {
 	// 加密盐值
 	@Size(min = 0, max = 200, message = "必须小于200个字符")
 	private String salt;
+	// 年龄
+	@NotNull(message = "此项是必须项")
+	private Integer age;
 	// 创建时间
 	@NotNull(message = "此项是必须项")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -51,13 +54,14 @@ public class UserVO extends BaseVO {
 	
     public UserVO () {}
 
-    public UserVO (Long id, String email, String phone, String accountName, String password, String salt, Date createTime, Date updateTime, Byte isActive) {
+    public UserVO (Long id, String email, String phone, String accountName, String password, String salt, Integer age, Date createTime, Date updateTime, Byte isActive) {
         this.id = id;
 		this.email = email;
 		this.phone = phone;
 		this.accountName = accountName;
 		this.password = password;
 		this.salt = salt;
+		this.age = age;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.isActive = isActive;
@@ -110,6 +114,14 @@ public class UserVO extends BaseVO {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 
 	public Date getCreateTime() {

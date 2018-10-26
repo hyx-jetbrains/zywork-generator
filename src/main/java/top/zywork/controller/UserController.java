@@ -56,8 +56,8 @@ public class UserController extends BaseController {
                 UserVO userVO = new UserVO();
                 userVO.setId((long) i + 1);
                 userVO.setAccountName("user" + (i + 1));
+                userVO.setAge(i + 1);
                 userVO.setCreateTime(DateUtils.currentDate());
-                System.out.println(DateUtils.currentDate());
                 userVO.setIsActive((byte) 0);
                 userVOList.add(userVO);
             }
