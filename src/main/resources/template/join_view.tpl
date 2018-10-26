@@ -60,8 +60,8 @@
         searchForm: {
           pageNo: 1,
           pageSize: 10,
-          sortColumn: '',
-          sortOrder: '',
+          sortColumn: null,
+          sortOrder: null,
           {zywork.searchFormFields}
         },
         table: {
