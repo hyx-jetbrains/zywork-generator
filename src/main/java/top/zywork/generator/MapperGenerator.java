@@ -181,6 +181,7 @@ public class MapperGenerator {
                 setClause.append(setValue(columnDetail.getFieldName(), column, isBatch));
             }
         }
+        setClause.append("update_time = CURRENT_TIMESTAMP,");
         return fileContent.replace(isBatch ? TemplateConstants.SET_BATCH_CLAUSE : TemplateConstants.SET_CLAUSE, setClause.toString());
     }
 
