@@ -325,6 +325,10 @@ public class ViewGenerator {
                     validateRules.append(columnDetail.getFieldName())
                             .append(": [")
                             .append("\n{type: 'number', required: true, message: '此项为必须项', trigger: 'blur, change'}\n],\n");
+                } else if (columnDetail.getJavaTypeName().equals("Date") && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls){
+                    validateRules.append(columnDetail.getFieldName())
+                            .append(": [")
+                            .append("\n{type: 'string', required: true, message: '此项为必须项', trigger: 'blur'}\n],\n");
                 }
             }
         }
