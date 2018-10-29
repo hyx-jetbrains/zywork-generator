@@ -84,7 +84,9 @@
           allUrl: '/{zywork.mappingUrl}/all',
           removeUrl: '/{zywork.mappingUrl}/remove/',
           batchRemoveUrl: '/{zywork.mappingUrl}/batch-remove',
-          detailUrl: '/{zywork.mappingUrl}/one/'
+          detailUrl: '/{zywork.mappingUrl}/one/',
+          activeUrl: '/{zywork.mappingUrl}/active'
+          batchActiveUrl: '/{zywork.mappingUrl}/batch-active'
         },
         page: {
           total: 0

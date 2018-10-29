@@ -125,9 +125,35 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
                 {zywork.beanNameLowerCase}{zywork.serviceSuffix}.updateBatch(BeanUtils.copyListObj({zywork.beanNameLowerCase}{zywork.voSuffix}List, {zywork.beanName}{zywork.dtoSuffix}.class));
                 statusVO.okStatus(200, "批量更新成功", null);
             } catch (ServiceException e) {
-                logger.error("更新失败：{}", e.getMessage());
+                logger.error("批量更新失败：{}", e.getMessage());
                 statusVO.errorStatus(500, "批量更新失败", null);
             }
+        }
+        return statusVO;
+    }
+
+    @PostMapping("active")
+    public ResponseStatusVO active(@RequestBody {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix}) {
+        ResponseStatusVO statusVO = new ResponseStatusVO();
+        try {
+            {zywork.beanNameLowerCase}{zywork.serviceSuffix}.update(BeanUtils.copy({zywork.beanNameLowerCase}{zywork.voSuffix}, {zywork.beanName}{zywork.dtoSuffix}.class));
+            statusVO.okStatus(200, "激活或冻结成功", null);
+        } catch (ServiceException e) {
+            logger.error("激活或冻结失败：{}", e.getMessage());
+            statusVO.errorStatus(500, "激活或冻结失败", null);
+        }
+        return statusVO;
+    }
+
+    @PostMapping("batch-active")
+    public ResponseStatusVO activeBatch(@RequestBody @Validated List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List) {
+        ResponseStatusVO statusVO = new ResponseStatusVO();
+        try {
+            {zywork.beanNameLowerCase}{zywork.serviceSuffix}.updateBatch(BeanUtils.copyListObj({zywork.beanNameLowerCase}{zywork.voSuffix}List, {zywork.beanName}{zywork.dtoSuffix}.class));
+            statusVO.okStatus(200, "批量激活或冻结成功", null);
+        } catch (ServiceException e) {
+            logger.error("批量激活或冻结失败：{}", e.getMessage());
+            statusVO.errorStatus(500, "批量激活或冻结失败", null);
         }
         return statusVO;
     }
