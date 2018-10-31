@@ -16,7 +16,7 @@
         </Card>
       </i-col>
     </Row>
-    <Modal v-model="modal.search" title="高级搜索" @on-visible-change="changeModalVisibleResetForm('searchForm', $event)">
+    <Modal v-model="modal.search" title="高级搜索">
       <Form ref="searchForm" :model="searchForm" :label-width="80">
         {zywork.searchFormItems}
       </Form>

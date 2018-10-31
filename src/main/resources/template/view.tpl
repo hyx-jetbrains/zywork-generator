@@ -46,7 +46,7 @@
         <Button type="primary" size="large" @click="edit">确定</Button>
       </div>
     </Modal>
-    <Modal v-model="modal.search" title="高级搜索" @on-visible-change="changeModalVisibleResetForm('searchForm', $event)">
+    <Modal v-model="modal.search" title="高级搜索">
       <Form ref="searchForm" :model="searchForm" :label-width="80">
         {zywork.searchFormItems}
       </Form>
@@ -56,7 +56,7 @@
         <Button type="primary" size="large" @click="searchOkModal('search')">确定</Button>
       </div>
     </Modal>
-    <Modal v-model="modal.detail" title="详情">
+    <Modal v-model="modal.detail" title="详情" @on-visible-change="changeModalVisibleResetForm('editForm', $event)">
       {zywork.detailItems}
     </Modal>
   </div>
@@ -223,7 +223,7 @@
       },
       showDetail(modal, row) {
         utils.showModal(this, modal)
-        this.form = row
+        this.form = JSON.parse(JSON.stringify(row))
       },
       changeModalVisibleResetForm(formRef, visible) {
         if (!visible) {
