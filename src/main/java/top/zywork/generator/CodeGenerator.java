@@ -47,6 +47,10 @@ public class CodeGenerator {
         if (StringUtils.isInArray(codeTypes, "view")) {
             ViewGenerator.generateView(generator, tableColumn);
         }
+
+        if (StringUtils.isInArray(codeTypes, "selectView")) {
+            ViewGenerator.generateSelectView(generator, tableColumn);
+        }
     }
 
     /**
