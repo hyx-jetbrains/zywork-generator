@@ -20,7 +20,6 @@ import top.zywork.vo.ResponseStatusVO;
 import top.zywork.vo.PagerVO;
 import top.zywork.vo.{zywork.beanName}{zywork.voSuffix};
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
