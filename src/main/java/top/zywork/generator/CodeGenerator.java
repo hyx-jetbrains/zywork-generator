@@ -85,8 +85,9 @@ public class CodeGenerator {
         if (StringUtils.isInArray(codeTypes, "controller")) {
             ControllerGenerator.generateJoinController(beanName, mappingUrl, generator);
         }
-
-        ViewGenerator.generateJoinView(beanName, mappingUrl, generator, primaryTable, columns, tableColumnList);
+        if (StringUtils.isInArray(codeTypes, "view")) {
+            ViewGenerator.generateJoinView(beanName, mappingUrl, generator, primaryTable, columns, tableColumnList);
+        }
     }
 
 }
