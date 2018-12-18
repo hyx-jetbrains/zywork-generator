@@ -12,6 +12,7 @@ import top.zywork.common.BindingResultUtils;
 import top.zywork.common.StringUtils;
 import top.zywork.dto.PagerDTO;
 import top.zywork.dto.{zywork.beanName}{zywork.dtoSuffix};
+import top.zywork.enums.ResponseStatusEnum;
 import top.zywork.exception.ServiceException;
 import top.zywork.query.{zywork.beanName}{zywork.querySuffix};
 import top.zywork.service.{zywork.beanName}{zywork.serviceSuffix};
@@ -41,14 +42,13 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
     @GetMapping("multi/{id}")
     public ResponseStatusVO listById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
-        List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List = new ArrayList<>();
         try {
             List<Object> objectList = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listById(id);
-            {zywork.beanNameLowerCase}VOList =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
-            statusVO.okStatus(200, "查询成功", {zywork.beanNameLowerCase}VOList);
+            List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
+            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", {zywork.beanNameLowerCase}{zywork.voSuffix}List);
         } catch (ServiceException e) {
             logger.error("返回单个对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(500, "查询失败", null);
+            statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
         }
         return statusVO;
     }
@@ -56,14 +56,13 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
     @GetMapping("all")
     public ResponseStatusVO listAll() {
         ResponseStatusVO statusVO = new ResponseStatusVO();
-        List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List = new ArrayList<>();
         try {
             List<Object> objectList = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAll();
-            {zywork.beanNameLowerCase}VOList =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
-            statusVO.okStatus(200, "查询成功", {zywork.beanNameLowerCase}VOList);
+            List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
+            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", {zywork.beanNameLowerCase}{zywork.voSuffix}List);
         } catch (ServiceException e) {
             logger.error("返回所有对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(500, "查询失败", null);
+            statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
         }
         return statusVO;
     }
@@ -71,15 +70,14 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
     @PostMapping("pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
-        PagerVO pagerVO = new PagerVO();
         try {
             PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listPageByCondition({zywork.beanNameLowerCase}{zywork.querySuffix});
-            pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
+            PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
             pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            statusVO.okStatus(200, "查询成功", pagerVO);
+            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", pagerVO);
         } catch (ServiceException e) {
             logger.error("返回指定条件的分页对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(500, "查询失败", null);
+            statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
         }
         return statusVO;
     }
