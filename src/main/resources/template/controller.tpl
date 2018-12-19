@@ -179,9 +179,10 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
     public ResponseStatusVO listAll() {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
-            List<Object> objectList = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAll();
-            List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List =  BeanUtils.copy(objectList, {zywork.beanName}{zywork.voSuffix}.class);
-            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", {zywork.beanNameLowerCase}{zywork.voSuffix}List);
+            PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAll();
+            PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
+            pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
+            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", pagerVO);
         } catch (ServiceException e) {
             logger.error("返回所有对象JSON数据失败：{}", e.getMessage());
             statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
