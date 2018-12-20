@@ -261,9 +261,8 @@ public class MapperGenerator {
     private static String generateQueryWhereClause(String fileContent, TableColumn tableColumn){
         List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
         StringBuilder whereClause = new StringBuilder("");
-        for (int i = 0, size = columnDetails.size(); i < size; i++) {
-            ColumnDetail columnDetail = columnDetails.get(i);
-            whereClause(whereClause, i, columnDetail.getFieldName(), columnDetail.getName(), columnDetail.getJavaTypeName());
+        for (ColumnDetail columnDetail : columnDetails) {
+            whereClause(whereClause, columnDetail.getFieldName(), columnDetail.getName(), columnDetail.getJavaTypeName());
         }
         return fileContent.replace(TemplateConstants.QUERY_WHERE_CLAUSE, whereClause.toString());
     }
@@ -277,15 +276,15 @@ public class MapperGenerator {
      */
     private static String generateJoinQueryWhereClause(Generator generator, String fileContent, String[] columns){
         StringBuilder whereClause = new StringBuilder("");
-        for (int i = 0, len = columns.length; i < len; i++) {
-            String[] tableNameAndColumn = columns[i].split("-");
+        for (String column : columns) {
+            String[] tableNameAndColumn = column.split("-");
             String tableName = tableNameAndColumn[0];
             String columnName = tableNameAndColumn[1];
             String javaType = tableNameAndColumn[2];
             String fullColumnName = tableName + "." + columnName;
             String field = StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix()))
                     + StringUtils.capitalize(PropertyUtils.columnToProperty(columnName));
-            whereClause(whereClause, i, field, fullColumnName, javaType);
+            whereClause(whereClause, field, fullColumnName, javaType);
         }
         return fileContent.replace(TemplateConstants.QUERY_WHERE_CLAUSE, whereClause.toString());
     }
@@ -293,19 +292,16 @@ public class MapperGenerator {
     /**
      * 生成查询语句的where条件部分
      * @param whereClause
-     * @param columnIndex
      * @param field
      * @param column
      * @param javaType
      */
-    private static void whereClause(StringBuilder whereClause, int columnIndex, String field, String column, String javaType) {
+    private static void whereClause(StringBuilder whereClause, String field, String column, String javaType) {
         if (javaType.equals("String")) {
             // 字符串的模糊搜索
             whereClause.append("<if test=\"query != null and query.")
                     .append(field).append(" != null and query.").append(field).append(" != ''\">\n\t\t\t");
-            if (columnIndex != 0) {
-                whereClause.append("and ");
-            }
+            whereClause.append("and ");
             whereClause.append(column)
                     .append(" like concat('%', ")
                     .append("#{query.")
@@ -315,9 +311,7 @@ public class MapperGenerator {
         } else {
             // 非字符串类型的 == 比较查询
             whereClause.append("<if test=\"query != null and query.").append(field).append(" != null\">\n\t\t\t");
-            if (columnIndex != 0) {
-                whereClause.append("and ");
-            }
+            whereClause.append("and ");
             whereClause.append(column)
                     .append(" = ")
                     .append("#{query.")
@@ -327,9 +321,7 @@ public class MapperGenerator {
             // 非字符串类型的 >= Min 比较查询
             whereClause.append("<if test=\"query != null and query.")
                     .append(field).append("Min != null and query.").append(field).append("Max == null").append("\">\n\t\t\t");
-            if (columnIndex != 0) {
-                whereClause.append("and ");
-            }
+            whereClause.append("and ");
             whereClause.append(column)
                     .append(" <![CDATA[ >= ]]> ")
                     .append("#{query.")
@@ -339,9 +331,7 @@ public class MapperGenerator {
             // 非字符串类型的 <= Max 比较查询
             whereClause.append("<if test=\"query != null and query.")
                     .append(field).append("Min == null and query.").append(field).append("Max != null").append("\">\n\t\t\t");
-            if (columnIndex != 0) {
-                whereClause.append("and ");
-            }
+            whereClause.append("and ");
             whereClause.append(column)
                     .append(" <![CDATA[ <= ]]> ")
                     .append("#{query.")
@@ -351,9 +341,7 @@ public class MapperGenerator {
             // 非字符串类型的 >= Min 且 <= Max 比较查询
             whereClause.append("<if test=\"query != null and query.")
                     .append(field).append("Min != null and query.").append(field).append("Max != null").append("\">\n\t\t\t");
-            if (columnIndex != 0) {
-                whereClause.append("and ");
-            }
+            whereClause.append("and ");
             whereClause.append(column)
                     .append(" <![CDATA[ >= ]]> ")
                     .append("#{query.")
