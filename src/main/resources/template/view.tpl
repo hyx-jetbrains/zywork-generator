@@ -34,7 +34,7 @@
       </Form>
       <div slot="footer">
         <Button type="text" size="large" @click="resetFormCancelModal('addForm', 'add')">取消</Button>
-        <Button type="primary" size="large" @click="add">确定</Button>
+        <Button type="primary" size="large" @click="add" :loading="loading.add">添加</Button>
       </div>
     </Modal>
     <Modal v-model="modal.edit" title="修改" @on-visible-change="changeModalVisibleResetForm('editForm', $event)">
@@ -43,7 +43,7 @@
       </Form>
       <div slot="footer">
         <Button type="text" size="large" @click="resetFormCancelModal('editForm', 'edit')">取消</Button>
-        <Button type="primary" size="large" @click="edit">确定</Button>
+        <Button type="primary" size="large" @click="edit" :loading="loading.edit">修改</Button>
       </div>
     </Modal>
     <Modal v-model="modal.search" title="高级搜索">
@@ -53,7 +53,7 @@
       <div slot="footer">
         <Button type="text" size="large" @click="resetForm('searchForm')">清空</Button>
         <Button type="text" size="large" @click="cancelModal('search')">取消</Button>
-        <Button type="primary" size="large" @click="searchOkModal('search')">确定</Button>
+        <Button type="primary" size="large" @click="searchOkModal('search')" :loading="loading.search">搜索</Button>
       </div>
     </Modal>
     <Modal v-model="modal.detail" title="详情" @on-visible-change="changeModalVisibleResetForm('editForm', $event)">
@@ -74,6 +74,11 @@
           edit: false,
           search: false,
           detail: false
+        },
+        loading: {
+          add: false,
+          edit: false,
+          search: false
         },
         urls: {
           addUrl: '/{zywork.mappingUrl}/save',
