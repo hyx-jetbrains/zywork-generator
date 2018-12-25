@@ -26,5 +26,5 @@
   "mapperSuffix": "DAOMapper",
   "viewFileDir": "views",
   "jsFileDir": "js",
-  "exclusiveAddEditColumns":"id,create_time,update_time,is_active"
+  "exclusiveAddEditColumns":"id,version,create_time,update_time,is_active"
 }

@@ -48,7 +48,7 @@
         <set>
             {zywork.setClause}
         </set>
-        where id = #{id}
+        where id = #{id} and version + 1 <![CDATA[<=]]> #{version}
     </update>
 
     <update id="updateBatch" parameterType="java.util.List">
@@ -56,6 +56,9 @@
             update {zywork.tableName}
             <set>
                 {zywork.setBatchClause}
+                <if test="item.version == null">
+                    version = version + 1,
+                </if>
             </set>
             where id = #{item.id}
         </foreach>
@@ -73,6 +76,10 @@
         select
         <include refid="select_columns"/>
         from {zywork.tableName} where id = #{id}
+    </select>
+
+    <select id="getVersionById" parameterType="long" resultType="integer">
+        select version from {zywork.tableName} where id = #{id}
     </select>
 
     <select id="listAll" resultType="{zywork.beanNameLowerCase}{zywork.doSuffix}">
