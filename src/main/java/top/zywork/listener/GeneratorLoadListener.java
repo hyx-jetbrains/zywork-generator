@@ -1,19 +1,16 @@
 package top.zywork.listener;
 
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.zywork.bean.Generator;
 import top.zywork.bean.JDBC;
 import top.zywork.common.FileUtils;
-import top.zywork.enums.CharsetEnum;
+import top.zywork.common.IOUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * 自动代码生成监听器<br/>
@@ -32,17 +29,11 @@ public class GeneratorLoadListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.info("zywork-generator启动，开始读取JDBC和Generator默认配置……");
-        try {
-            JDBC jdbc = JSON.parseObject(org.apache.commons.io.FileUtils.readFileToString(
-                    new File(FileUtils.getResourcePath("classpath:/config/jdbc.json")), CharsetEnum.UTF8.getValue()), JDBC.class);
-            Generator generator = JSON.parseObject(org.apache.commons.io.FileUtils.readFileToString(
-                    new File(FileUtils.getResourcePath("classpath:/config/generator.json")), CharsetEnum.UTF8.getValue()), Generator.class);
-            ServletContext servletContext = servletContextEvent.getServletContext();
-            servletContext.setAttribute("jdbc", jdbc);
-            servletContext.setAttribute("generator", generator);
-        } catch (IOException e) {
-            logger.error("read jdbc and generator json config file error: {}", e.getMessage());
-        }
+        JDBC jdbc = IOUtils.readJsonFileToObject(FileUtils.getResourcePath("classpath:/config/jdbc.json"), JDBC.class);
+        Generator generator = IOUtils.readJsonFileToObject(FileUtils.getResourcePath("classpath:/config/generator.json"), Generator.class);
+        ServletContext servletContext = servletContextEvent.getServletContext();
+        servletContext.setAttribute("jdbc", jdbc);
+        servletContext.setAttribute("generator", generator);
     }
 
     @Override
