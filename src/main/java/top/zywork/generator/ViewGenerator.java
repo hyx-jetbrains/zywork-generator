@@ -125,6 +125,8 @@ public class ViewGenerator {
                 formItem.append("\n\t<Input v-model=\"")
                         .append("form.")
                         .append(fieldName)
+                        .append("\" placeholder=\"请输入")
+                        .append(title)
                         .append("\"/>");
                 break;
             case "Date":
@@ -134,6 +136,8 @@ public class ViewGenerator {
                         .append(":value=\"")
                         .append("form.")
                         .append(fieldName)
+                        .append("\" placeholder=\"请输入")
+                        .append(title)
                         .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm:ss\" style=\"width: 100%;\">")
                         .append("</DatePicker>");
                 break;
@@ -141,6 +145,8 @@ public class ViewGenerator {
                 formItem.append("\n\t<InputNumber v-model=\"")
                         .append("form.")
                         .append(fieldName)
+                        .append("\" placeholder=\"请输入")
+                        .append(title)
                         .append("\" style=\"width: 100%;\"/>");
                 break;
         }
@@ -169,6 +175,8 @@ public class ViewGenerator {
                             .append("\n\t<Input v-model=\"")
                             .append("searchForm.")
                             .append(fieldName)
+                            .append("\" placeholder=\"请输入")
+                            .append(columnDetail.getComment())
                             .append("\"/>");
                     break;
                 case "Date":
@@ -189,6 +197,8 @@ public class ViewGenerator {
                             .append("searchForm.")
                             .append(fieldName)
                             .append("Min")
+                            .append("\" placeholder=\"请输入开始")
+                            .append(columnDetail.getComment())
                             .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm:ss\" style=\"width: 100%;\">")
                             .append("</DatePicker>")
                             .append("\n</FormItem>")
@@ -207,6 +217,8 @@ public class ViewGenerator {
                             .append("searchForm.")
                             .append(fieldName)
                             .append("Max")
+                            .append("\" placeholder=\"请输入结束")
+                            .append(columnDetail.getComment())
                             .append("\" type=\"datetime\" format=\"yyyy-MM-dd HH:mm:ss\" style=\"width: 100%;\">")
                             .append("</DatePicker>")
                             .append("\n</FormItem>")
@@ -227,6 +239,8 @@ public class ViewGenerator {
                             .append("searchForm.")
                             .append(fieldName)
                             .append("Min")
+                            .append("\" placeholder=\"请输入开始")
+                            .append(columnDetail.getComment())
                             .append("\" style=\"width: 100%;\"/>")
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
@@ -240,6 +254,8 @@ public class ViewGenerator {
                             .append("searchForm.")
                             .append(fieldName)
                             .append("Max")
+                            .append("\" placeholder=\"请输入结束")
+                            .append(columnDetail.getComment())
                             .append("\" style=\"width: 100%;\"/>")
                             .append("\n</FormItem>")
                             .append("\n</i-col>")
