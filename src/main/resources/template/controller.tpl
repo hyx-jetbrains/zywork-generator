@@ -38,7 +38,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
 
     private {zywork.beanName}{zywork.serviceSuffix} {zywork.beanNameLowerCase}{zywork.serviceSuffix};
 
-    @PostMapping("save")
+    @PostMapping("admin/save")
     public ResponseStatusVO save(@RequestBody @Validated {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix}, BindingResult bindingResult) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         if (bindingResult.hasErrors()) {
@@ -55,7 +55,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("batch-save")
+    @PostMapping("admin/batch-save")
     public ResponseStatusVO saveBatch(@RequestBody @Validated List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List, BindingResult bindingResult) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         if (bindingResult.hasErrors()) {
@@ -72,7 +72,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @GetMapping("remove/{id}")
+    @GetMapping("admin/remove/{id}")
     public ResponseStatusVO removeById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -85,7 +85,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("batch-remove")
+    @PostMapping("admin/batch-remove")
     public ResponseStatusVO removeByIds(@RequestBody String[] ids) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -98,7 +98,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("update")
+    @PostMapping("admin/update")
     public ResponseStatusVO update(@RequestBody @Validated {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix}, BindingResult bindingResult) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         if (bindingResult.hasErrors()) {
@@ -119,7 +119,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("batch-update")
+    @PostMapping("admin/batch-update")
     public ResponseStatusVO updateBatch(@RequestBody @Validated List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List, BindingResult bindingResult) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         if (bindingResult.hasErrors()) {
@@ -136,7 +136,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("active")
+    @PostMapping("admin/active")
     public ResponseStatusVO active(@RequestBody {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix}) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -149,7 +149,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("batch-active")
+    @PostMapping("admin/batch-active")
     public ResponseStatusVO activeBatch(@RequestBody @Validated List<{zywork.beanName}{zywork.voSuffix}> {zywork.beanNameLowerCase}{zywork.voSuffix}List) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -162,7 +162,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @GetMapping("one/{id}")
+    @GetMapping("admin/one/{id}")
     public ResponseStatusVO getById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         {zywork.beanName}{zywork.voSuffix} {zywork.beanNameLowerCase}{zywork.voSuffix} = new {zywork.beanName}{zywork.voSuffix}();
@@ -179,7 +179,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @GetMapping("all")
+    @GetMapping("admin/all")
     public ResponseStatusVO listAll() {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -194,7 +194,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("pager-cond")
+    @PostMapping("admin/pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {

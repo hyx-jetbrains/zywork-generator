@@ -31,7 +31,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
 
     private {zywork.beanName}{zywork.serviceSuffix} {zywork.beanNameLowerCase}{zywork.serviceSuffix};
 
-    @GetMapping("multi/{id}")
+    @GetMapping("admin/multi/{id}")
     public ResponseStatusVO listById(@PathVariable("id") Long id) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -46,7 +46,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @GetMapping("all")
+    @GetMapping("admin/all")
     public ResponseStatusVO listAll() {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
@@ -61,7 +61,7 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return statusVO;
     }
 
-    @PostMapping("pager-cond")
+    @PostMapping("admin/pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
         ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
