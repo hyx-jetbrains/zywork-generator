@@ -81,17 +81,17 @@
           search: false
         },
         urls: {
-          addUrl: '/{zywork.mappingUrl}/save',
-          batchAddUrl: '/{zywork.mappingUrl}/batch-save',
-          editUrl: '/{zywork.mappingUrl}/update',
-          batchEditUrl: '/{zywork.mappingUrl}/batch-update',
-          searchUrl: '/{zywork.mappingUrl}/pager-cond',
-          allUrl: '/{zywork.mappingUrl}/all',
-          removeUrl: '/{zywork.mappingUrl}/remove/',
-          batchRemoveUrl: '/{zywork.mappingUrl}/batch-remove',
-          detailUrl: '/{zywork.mappingUrl}/one/',
-          activeUrl: '/{zywork.mappingUrl}/active',
-          batchActiveUrl: '/{zywork.mappingUrl}/batch-active'
+          addUrl: '/{zywork.mappingUrl}/admin/save',
+          batchAddUrl: '/{zywork.mappingUrl}/admin/batch-save',
+          editUrl: '/{zywork.mappingUrl}/admin/update',
+          batchEditUrl: '/{zywork.mappingUrl}/admin/batch-update',
+          searchUrl: '/{zywork.mappingUrl}/admin/pager-cond',
+          allUrl: '/{zywork.mappingUrl}/admin/all',
+          removeUrl: '/{zywork.mappingUrl}/admin/remove/',
+          batchRemoveUrl: '/{zywork.mappingUrl}/admin/batch-remove',
+          detailUrl: '/{zywork.mappingUrl}/admin/one/',
+          activeUrl: '/{zywork.mappingUrl}/admin/active',
+          batchActiveUrl: '/{zywork.mappingUrl}/admin/batch-active'
         },
         page: {
           total: 0

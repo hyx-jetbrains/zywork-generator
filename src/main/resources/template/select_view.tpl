@@ -47,10 +47,10 @@
           detail: false
         },
         urls: {
-          searchUrl: '/{zywork.mappingUrl}/pager-cond',
-          allUrl: '/{zywork.mappingUrl}/all',
-          detailUrl: '/{zywork.mappingUrl}/one/',
-          multiUrl: '/{zywork.mappingUrl}/multi/'
+          searchUrl: '/{zywork.mappingUrl}/admin/pager-cond',
+          allUrl: '/{zywork.mappingUrl}/admin/all',
+          detailUrl: '/{zywork.mappingUrl}/admin/one/',
+          multiUrl: '/{zywork.mappingUrl}/admin/multi/'
         },
         page: {
           total: 0
