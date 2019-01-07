@@ -33,47 +33,41 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
 
     @GetMapping("admin/multi/{id}")
     public ResponseStatusVO listById(@PathVariable("id") Long id) {
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
             PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listById(id);
             PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
             pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", pagerVO);
+            return ResponseStatusVO.ok("查询成功", pagerVO);
         } catch (ServiceException e) {
             logger.error("返回单个对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
+            return ResponseStatusVO.error("查询失败", null);
         }
-        return statusVO;
     }
 
     @GetMapping("admin/all")
     public ResponseStatusVO listAll() {
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
             PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAll();
             PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
             pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", pagerVO);
+            return ResponseStatusVO.ok("查询成功", pagerVO);
         } catch (ServiceException e) {
             logger.error("返回所有对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
+            return ResponseStatusVO.error("查询失败", null);
         }
-        return statusVO;
     }
 
     @PostMapping("admin/pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
             PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listPageByCondition({zywork.beanNameLowerCase}{zywork.querySuffix});
             PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
             pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            statusVO.okStatus(ResponseStatusEnum.OK.getCode(), "查询成功", pagerVO);
+            return ResponseStatusVO.ok("查询成功", pagerVO);
         } catch (ServiceException e) {
             logger.error("返回指定条件的分页对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(ResponseStatusEnum.ERROR.getCode(), "查询失败", null);
+            return ResponseStatusVO.error("查询失败", null);
         }
-        return statusVO;
     }
 
     @Autowired
