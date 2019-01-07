@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import top.zywork.common.BeanUtils;
 import top.zywork.dto.PagerDTO;
-import top.zywork.enums.ResponseStatusEnum;
 import top.zywork.exception.ServiceException;
 import top.zywork.query.{zywork.beanName}{zywork.querySuffix};
 import top.zywork.service.{zywork.beanName}{zywork.serviceSuffix};

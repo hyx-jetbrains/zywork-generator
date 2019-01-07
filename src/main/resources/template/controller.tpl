@@ -12,7 +12,6 @@ import top.zywork.common.BindingResultUtils;
 import top.zywork.common.StringUtils;
 import top.zywork.dto.PagerDTO;
 import top.zywork.dto.{zywork.beanName}{zywork.dtoSuffix};
-import top.zywork.enums.ResponseStatusEnum;
 import top.zywork.exception.ServiceException;
 import top.zywork.query.{zywork.beanName}{zywork.querySuffix};
 import top.zywork.service.{zywork.beanName}{zywork.serviceSuffix};
