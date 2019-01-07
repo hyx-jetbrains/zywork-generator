@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import top.zywork.bean.UserVO;
 import top.zywork.common.BindingResultUtils;
 import top.zywork.common.DateUtils;
@@ -31,23 +34,19 @@ public class UserController extends BaseController {
 
     @PostMapping("save")
     public ResponseStatusVO save(@RequestBody @Validated UserVO userVO, BindingResult bindingResult) {
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         if (bindingResult.hasErrors()) {
-            statusVO.dataErrorStatus(500, BindingResultUtils.errorString(bindingResult), null);
-        } else {
-            try {
-                statusVO.okStatus(200, "添加成功", null);
-            } catch (ServiceException e) {
-                logger.error("添加失败：{}", e.getMessage());
-                statusVO.errorStatus(500, "添加失败", null);
-            }
+            return ResponseStatusVO.dataError(BindingResultUtils.errorString(bindingResult), null);
         }
-        return statusVO;
+        try {
+            return ResponseStatusVO.ok("添加成功", null);
+        } catch (ServiceException e) {
+            logger.error("添加失败：{}", e.getMessage());
+            return ResponseStatusVO.error("添加失败", null);
+        }
     }
 
     @PostMapping("pager-cond")
     public ResponseStatusVO listPageByCondition() {
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         PagerVO pagerVO = new PagerVO();
         try {
             pagerVO.setTotal(10L);
@@ -62,11 +61,10 @@ public class UserController extends BaseController {
                 userVOList.add(userVO);
             }
             pagerVO.setRows(userVOList);
-            statusVO.okStatus(200, "查询成功", pagerVO);
+            return ResponseStatusVO.ok("查询成功", pagerVO);
         } catch (ServiceException e) {
             logger.error("返回指定条件的分页对象JSON数据失败：{}", e.getMessage());
-            statusVO.errorStatus(500, "查询失败", null);
+            return ResponseStatusVO.error("查询失败", null);
         }
-        return statusVO;
     }
 }

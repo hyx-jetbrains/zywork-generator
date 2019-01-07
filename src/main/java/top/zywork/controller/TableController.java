@@ -36,24 +36,16 @@ public class TableController {
     @GetMapping("all")
     public ResponseStatusVO allTables(HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
-        ResponseStatusVO statusVO = new ResponseStatusVO();
-        List<TableColumn> tableColumnList;
-        Object obj = servletContext.getAttribute("tableColumnList");
-        if (obj == null) {
-            JDBC jdbc = (JDBC) servletContext.getAttribute("jdbc");
-            JDBCUtils jdbcUtils = new JDBCUtils();
-            jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
-            tableColumnList = jdbcUtils.getTableColumns();
-            servletContext.setAttribute("tableColumnList", tableColumnList);
-        } else {
-            tableColumnList = (List<TableColumn>) obj;
-        }
+        JDBC jdbc = (JDBC) servletContext.getAttribute("jdbc");
+        JDBCUtils jdbcUtils = new JDBCUtils();
+        jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
+        List<TableColumn> tableColumnList = jdbcUtils.getTableColumns();
+        servletContext.setAttribute("tableColumnList", tableColumnList);
         List<IViewSelect> iViewSelectList = new ArrayList<>();
         for (TableColumn tableColumn : tableColumnList) {
             iViewSelectList.add(new IViewSelect(tableColumn.getTableName(), tableColumn.getTableName(), false));
         }
-        statusVO.okStatus(200, "查询所有表数据成功", iViewSelectList);
-        return statusVO;
+        return ResponseStatusVO.ok("查询所有表数据成功", iViewSelectList);
     }
 
     /**
@@ -63,22 +55,20 @@ public class TableController {
      * @return
      */
     @GetMapping("table-columns/{tableName}")
+    @SuppressWarnings({"unchecked"})
     public ResponseStatusVO tableColumn(@PathVariable("tableName") String tableName, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         Object obj = servletContext.getAttribute("tableColumnList");
-        List<TableColumn> tableColumnList = null;
-        if (obj != null) {
-            tableColumnList = (List<TableColumn>) obj;
-            for (TableColumn tableColumn : tableColumnList) {
-                if (tableName.equals(tableColumn.getTableName())) {
-                    statusVO.okStatus(200, "查询表字段成功", tableColumn.getColumnDetails());
-                }
-            }
-        } else {
-            statusVO.dataErrorStatus(500, "不存在表字段", null);
+        if (obj == null) {
+            return ResponseStatusVO.dataError("不存在表字段", null);
         }
-        return statusVO;
+        List<TableColumn> tableColumnList = (List<TableColumn>) obj;
+        for (TableColumn tableColumn : tableColumnList) {
+            if (tableName.equals(tableColumn.getTableName())) {
+                return ResponseStatusVO.ok("查询表字段成功", tableColumn.getColumnDetails());
+            }
+        }
+        return ResponseStatusVO.dataError("不存在的表", null);
     }
 
     /**
@@ -88,27 +78,24 @@ public class TableController {
      * @return
      */
     @GetMapping("tables-columns/{tableNames}")
+    @SuppressWarnings({"unchecked"})
     public ResponseStatusVO tablesColumns(@PathVariable("tableNames") String tableNames, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         Object obj = servletContext.getAttribute("tableColumnList");
         List<List<ColumnDetail>> tablesColumns = new ArrayList<List<ColumnDetail>>();
-        List<TableColumn> tableColumnList = null;
-        if (obj != null) {
-            tableColumnList = (List<TableColumn>) obj;
-            String[] tables = tableNames.split(",");
-            for (String tableName : tables) {
-                for (TableColumn tableColumn : tableColumnList) {
-                    if (tableName.equals(tableColumn.getTableName())) {
-                        tablesColumns.add(tableColumn.getColumnDetails());
-                    }
+        if (obj == null) {
+            return ResponseStatusVO.dataError("不存在表字段", null);
+        }
+        List<TableColumn> tableColumnList = (List<TableColumn>) obj;
+        String[] tables = tableNames.split(",");
+        for (String tableName : tables) {
+            for (TableColumn tableColumn : tableColumnList) {
+                if (tableName.equals(tableColumn.getTableName())) {
+                    tablesColumns.add(tableColumn.getColumnDetails());
                 }
             }
-            statusVO.okStatus(200, "查询多个表的字段成功", tablesColumns);
-        } else {
-            statusVO.dataErrorStatus(500,"不存在表字段", null);
         }
-        return statusVO;
+        return ResponseStatusVO.ok("查询多个表的字段成功", tablesColumns);
     }
 
 }

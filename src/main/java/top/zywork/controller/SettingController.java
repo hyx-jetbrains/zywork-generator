@@ -30,9 +30,7 @@ public class SettingController {
     @GetMapping("jdbc")
     public ResponseStatusVO showJdbc(HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
-        ResponseStatusVO statusVO = new ResponseStatusVO();
-        statusVO.okStatus(200, "成功获取JDBC配置信息", servletContext.getAttribute("jdbc"));
-        return statusVO;
+        return ResponseStatusVO.ok("成功获取JDBC配置信息", servletContext.getAttribute("jdbc"));
     }
 
     /**
@@ -43,9 +41,7 @@ public class SettingController {
     @GetMapping("generator")
     public ResponseStatusVO showGenerator(HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
-        ResponseStatusVO statusVO = new ResponseStatusVO();
-        statusVO.okStatus(200, "成功获取JDBC配置信息", servletContext.getAttribute("generator"));
-        return statusVO;
+        return ResponseStatusVO.ok("成功获取Generator配置信息", servletContext.getAttribute("generator"));
     }
 
     /**
@@ -58,16 +54,14 @@ public class SettingController {
     public ResponseStatusVO saveJdbc(@RequestBody JDBC jdbc, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         JDBCUtils jdbcUtils = new JDBCUtils();
-        ResponseStatusVO statusVO = new ResponseStatusVO();
         try {
             jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
             servletContext.setAttribute("jdbc", jdbc);
             servletContext.removeAttribute("tableColumnList");
-            statusVO.okStatus(200, "已修改JDBC配置", null);
+            return ResponseStatusVO.ok("已修改JDBC配置", null);
         } catch (AppException e){
-            statusVO.errorStatus(500, "数据库连接失败，请重新修改JDBC配置", null);
+            return ResponseStatusVO.error("数据库连接失败，请重新修改JDBC配置", null);
         }
-        return statusVO;
     }
 
     /**
@@ -80,9 +74,7 @@ public class SettingController {
     public ResponseStatusVO saveGenerator(@RequestBody Generator generator, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         servletContext.setAttribute("generator", generator);
-        ResponseStatusVO statusVO = new ResponseStatusVO();
-        statusVO.okStatus(200, "已修改Generator配置", null);
-        return statusVO;
+        return ResponseStatusVO.ok("已修改Generator配置", null);
     }
 
 }
