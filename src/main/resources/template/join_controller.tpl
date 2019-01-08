@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import top.zywork.common.BeanUtils;
 import top.zywork.dto.PagerDTO;
-import top.zywork.exception.ServiceException;
 import top.zywork.query.{zywork.beanName}{zywork.querySuffix};
 import top.zywork.service.{zywork.beanName}{zywork.serviceSuffix};
 import top.zywork.vo.ResponseStatusVO;
@@ -32,41 +31,26 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
 
     @GetMapping("admin/multi/{id}")
     public ResponseStatusVO listById(@PathVariable("id") Long id) {
-        try {
-            PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listById(id);
-            PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
-            pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            return ResponseStatusVO.ok("查询成功", pagerVO);
-        } catch (ServiceException e) {
-            logger.error("返回单个对象JSON数据失败：{}", e.getMessage());
-            return ResponseStatusVO.error("查询失败", null);
-        }
+        PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listById(id);
+        PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
+        pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
+        return ResponseStatusVO.ok("查询成功", pagerVO);
     }
 
     @GetMapping("admin/all")
     public ResponseStatusVO listAll() {
-        try {
-            PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAll();
-            PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
-            pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            return ResponseStatusVO.ok("查询成功", pagerVO);
-        } catch (ServiceException e) {
-            logger.error("返回所有对象JSON数据失败：{}", e.getMessage());
-            return ResponseStatusVO.error("查询失败", null);
-        }
+        PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAll();
+        PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
+        pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
+        return ResponseStatusVO.ok("查询成功", pagerVO);
     }
 
     @PostMapping("admin/pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
-        try {
-            PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listPageByCondition({zywork.beanNameLowerCase}{zywork.querySuffix});
-            PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
-            pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
-            return ResponseStatusVO.ok("查询成功", pagerVO);
-        } catch (ServiceException e) {
-            logger.error("返回指定条件的分页对象JSON数据失败：{}", e.getMessage());
-            return ResponseStatusVO.error("查询失败", null);
-        }
+        PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listPageByCondition({zywork.beanNameLowerCase}{zywork.querySuffix});
+        PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
+        pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
+        return ResponseStatusVO.ok("查询成功", pagerVO);
     }
 
     @Autowired

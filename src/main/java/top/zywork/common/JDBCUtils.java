@@ -29,13 +29,16 @@ public class JDBCUtils {
      * @param url 连接url
      * @param username 用户名
      * @param password 密码
+     * @return 连接成功返回true，连接失败返回false
      */
-    public void connect(String driverClassName, String url, String username, String password) {
+    public boolean connect(String driverClassName, String url, String username, String password) {
         try {
             Class.forName(driverClassName);
             this.connection = DriverManager.getConnection(url, username, password);
+            return true;
         } catch (ClassNotFoundException | SQLException e) {
             logger.error(e.getMessage());
+            return false;
         }
     }
 
@@ -126,7 +129,6 @@ public class JDBCUtils {
             }
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw ExceptionUtils.appException(e);
         } finally {
             try {
                 if (columnResultSet != null && !columnResultSet.isClosed()) {
@@ -148,7 +150,7 @@ public class JDBCUtils {
             return connection.getMetaData().getUserName();
         } catch (SQLException e) {
             logger.error(e.getMessage());
-            throw ExceptionUtils.appException(e);
+            return null;
         }
     }
 

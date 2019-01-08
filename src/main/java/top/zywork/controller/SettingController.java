@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.*;
 import top.zywork.bean.Generator;
 import top.zywork.bean.JDBC;
 import top.zywork.common.JDBCUtils;
-import top.zywork.exception.AppException;
 import top.zywork.vo.ResponseStatusVO;
 
 import javax.servlet.ServletContext;
@@ -24,6 +23,7 @@ public class SettingController {
 
     /**
      * 获取JDBC配置
+     *
      * @param request
      * @return
      */
@@ -35,6 +35,7 @@ public class SettingController {
 
     /**
      * 获取generator配置
+     *
      * @param request
      * @return
      */
@@ -46,6 +47,7 @@ public class SettingController {
 
     /**
      * 更新jdbc配置
+     *
      * @param jdbc
      * @param request
      * @return
@@ -54,18 +56,17 @@ public class SettingController {
     public ResponseStatusVO saveJdbc(@RequestBody JDBC jdbc, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         JDBCUtils jdbcUtils = new JDBCUtils();
-        try {
-            jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
+        if (jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword())) {
             servletContext.setAttribute("jdbc", jdbc);
             servletContext.removeAttribute("tableColumnList");
             return ResponseStatusVO.ok("已修改JDBC配置", null);
-        } catch (AppException e){
-            return ResponseStatusVO.error("数据库连接失败，请重新修改JDBC配置", null);
         }
+        return ResponseStatusVO.error("数据库连接失败，请重新修改JDBC配置", null);
     }
 
     /**
      * 更新generator配置
+     *
      * @param generator
      * @param request
      * @return
