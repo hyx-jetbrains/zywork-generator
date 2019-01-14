@@ -1,7 +1,5 @@
 package top.zywork.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import top.zywork.bean.Generator;
 import top.zywork.constant.TemplateConstants;
 
