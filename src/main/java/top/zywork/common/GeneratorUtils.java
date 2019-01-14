@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import top.zywork.bean.Generator;
 import top.zywork.constant.TemplateConstants;
 
-import java.io.*;
+import java.io.File;
 
 /**
  * 代码自动生成工具类<br/>
@@ -17,51 +17,22 @@ import java.io.*;
  */
 public class GeneratorUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(GeneratorUtils.class);
-
     /**
      * 读取代码模板文件
      * @param templateFile 模板文件路径
      * @return 模板文件的字符串内容
      */
     public static String readTemplate(Generator generator, String templateFile) {
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(
-                    new InputStreamReader(
-                            new FileInputStream(FileUtils.getResourcePath(TemplateConstants.TEMPLATE_FILE_DIR + templateFile)),
-                            generator.getCharset()));
-            StringBuilder sb = new StringBuilder("");
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line).append("\r\n");
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            logger.error("read generator template error: {}", e.getMessage());
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    logger.error("buffered reader close error: {}", e.getMessage());
-                }
-            }
-        }
-        return null;
+        return IOUtils.getText(FileUtils.getResourcePath(TemplateConstants.TEMPLATE_FILE_DIR + templateFile), generator.getCharset());
     }
 
     /**
      * 在代码保存目录中创建Java代码的基础package
      */
-    public static File createBasePackage(Generator generator) {
+    public static String createBasePackage(Generator generator) {
         String packagePath = generator.getSaveBaseDir() + File.separator + generator.getJavaSrcDir()
                 + File.separator + generator.getBasePackage();
-        File file = new File(packagePath.replace(".", File.separator));
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        return file;
+        return FileUtils.mkdirs(packagePath.replace(".", File.separator));
     }
 
     /**
@@ -70,13 +41,7 @@ public class GeneratorUtils {
      * @return 创建好的包对应的目录的绝对路径
      */
     public static String createPackage(Generator generator, String packageName) {
-        String packagePath = "";
-        packagePath = packageName.replace(".", File.separator);
-        File file = new File(createBasePackage(generator), packagePath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        return file.getAbsolutePath();
+        return FileUtils.mkdirs(createBasePackage(generator), packageName.replace(".", File.separator));
     }
 
     /**
@@ -85,12 +50,8 @@ public class GeneratorUtils {
      * @return 创建的资源目录的绝对路径
      */
     public static String createResDir(Generator generator, String resDirName) {
-        File file = new File(generator.getSaveBaseDir() + File.separator
+        return FileUtils.mkdirs(generator.getSaveBaseDir() + File.separator
                 + generator.getResourceDir() + File.separator + resDirName);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        return file.getAbsolutePath();
     }
 
     /**
@@ -100,24 +61,7 @@ public class GeneratorUtils {
      * @param fileName 文件名
      */
     public static void writeFile(String fileContent, String path, String fileName) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(
-                    new OutputStreamWriter(
-                            new FileOutputStream(path + File.separator + fileName), "UTF-8"));
-            bufferedWriter.write(fileContent);
-
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        } finally {
-            try {
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
-                }
-            } catch (IOException e) {
-                logger.error(e.getMessage());
-            }
-        }
+        IOUtils.writeText(fileContent, path + File.separator + fileName);
     }
 
     /**
