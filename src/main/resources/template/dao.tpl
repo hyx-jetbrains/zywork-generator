@@ -18,6 +18,9 @@ import java.util.List;
 public interface {zywork.beanName}{zywork.suffix} extends BaseDAO {
 
     @Override
+    List<Object> listAllByCondition(@Param("query") Object queryObj);
+
+    @Override
     List<Object> listPageByCondition(@Param("query") Object queryObj);
 
     @Override

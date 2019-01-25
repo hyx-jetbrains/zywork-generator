@@ -89,6 +89,22 @@
         order by update_time desc, create_time desc
     </select>
 
+    <select id="listAllByCondition" resultType="{zywork.beanNameLowerCase}{zywork.doSuffix}">
+        select
+        <include refid="select_columns"/>
+        from {zywork.tableName}
+        <where>
+            <include refid="query_where_clause"/>
+        </where>
+        order by
+        <if test="query.sortColumn != null and query.sortColumn != ''">
+             ${query.sortColumn} ${query.sortOrder}
+        </if>
+        <if test="query.sortColumn == null or query.sortColumn == ''">
+            update_time desc, create_time desc
+        </if>
+    </select>
+
     <select id="listPageByCondition" resultType="{zywork.beanNameLowerCase}{zywork.doSuffix}">
         select
         <include refid="select_columns"/>
