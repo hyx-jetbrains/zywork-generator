@@ -39,8 +39,7 @@ public class ViewGenerator {
                 .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
                 .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumn))
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn))
-                .replace(TemplateConstants.FIT_COLUMNS, generateFitColumns(tableColumn));
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
     }
 
@@ -60,8 +59,7 @@ public class ViewGenerator {
                 .replace(TemplateConstants.MAPPING_URL, moduleName)
                 .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn))
-                .replace(TemplateConstants.FIT_COLUMNS, generateFitColumns(tableColumn));
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "List.vue");
     }
 
@@ -84,8 +82,7 @@ public class ViewGenerator {
                 .replace(TemplateConstants.MAPPING_URL, mappingUrl)
                 .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn))
-                .replace(TemplateConstants.FIT_COLUMNS, generateFitColumns(tableColumn));
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
     }
 
