@@ -388,7 +388,7 @@ public class ViewGenerator {
                     .append("\nkey: '")
                     .append(columnDetail.getFieldName())
                     .append("',")
-                    .append("\nwidth: 120,")
+                    .append("\nminWidth: 120,")
                     .append("\nsortable: true\n},\n");
         }
         return tableColumns.toString();

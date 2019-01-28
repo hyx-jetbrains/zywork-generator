@@ -117,7 +117,6 @@
     },
     computed: {},
     mounted() {
-      this.fitTable()
       this.search()
     },
     methods: {
@@ -161,9 +160,6 @@
       },
       changePageSize(pageSize) {
         utils.changePageSize(this, pageSize)
-      },
-      fitTable() {
-        utils.fitTable(this, 'dataTable', this.table.tableColumns, [{zywork.fitColumns}])
       },
       confirmSelection() {
         // 确认选择的逻辑

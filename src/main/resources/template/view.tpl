@@ -131,7 +131,7 @@
             {
               title: '激活状态',
               key: 'isActive',
-              width: 100,
+              minWidth: 100,
               align: 'center',
               render: (h, params) => {
                 return h('i-switch', {
@@ -223,7 +223,6 @@
     },
     computed: {},
     mounted() {
-      this.fitTable()
       this.search()
     },
     methods: {
@@ -292,9 +291,6 @@
       },
       changePageSize(pageSize) {
         utils.changePageSize(this, pageSize)
-      },
-      fitTable() {
-        utils.fitTable(this, 'dataTable', this.table.tableColumns, [{zywork.fitColumns}])
       }
     }
   }
