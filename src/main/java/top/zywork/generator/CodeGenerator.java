@@ -50,6 +50,7 @@ public class CodeGenerator {
 
         if (StringUtils.isInArray(codeTypes, "selectView")) {
             ViewGenerator.generateSelectView(generator, tableColumn);
+            ViewGenerator.generateSelectViewSingle(generator, tableColumn);
         }
     }
 

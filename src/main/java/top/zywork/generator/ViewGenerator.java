@@ -44,7 +44,7 @@ public class ViewGenerator {
     }
 
     /**
-     * 生成单表的供选择的视图文件
+     * 生成单表的供选择的视图文件，多选
      * @param generator Generator对象
      * @param tableColumn 单表的所有字段组成的对象
      */
@@ -61,6 +61,26 @@ public class ViewGenerator {
                 .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
                 .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "List.vue");
+    }
+
+    /**
+     * 生成单表的供选择的视图文件，单选
+     * @param generator Generator对象
+     * @param tableColumn 单表的所有字段组成的对象
+     */
+    public static void generateSelectViewSingle(Generator generator, TableColumn tableColumn) {
+        String beanName = GeneratorUtils.tableNameToClassName(tableColumn.getTableName(), generator.getTablePrefix());
+        String moduleName = GeneratorUtils.getModuleName(tableColumn.getTableName(), generator.getTablePrefix());
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.SELECT_VIEW_SINGLE_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
+                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
+                .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName + "ListSingle")
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "ListSingle.vue");
     }
 
     /**

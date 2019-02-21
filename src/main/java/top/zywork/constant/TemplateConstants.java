@@ -40,6 +40,8 @@ public class TemplateConstants {
 
     public static final String SELECT_VIEW_TEMPLATE = "select_view.tpl";
 
+    public static final String SELECT_VIEW_SINGLE_TEMPLATE = "select_view_single.tpl";
+
     public static final String BEAN_NAME = "{zywork.beanName}";
 
     public static final String CLASS_SUFFIX = "{zywork.suffix}";
