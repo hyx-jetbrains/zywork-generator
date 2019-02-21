@@ -45,6 +45,14 @@ public class {zywork.beanName}{zywork.suffix} extends BaseController {
         return ResponseStatusVO.ok("查询成功", pagerVO);
     }
 
+    @PostMapping("admin/all-cond")
+    public ResponseStatusVO listAllByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
+        PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listAllByCondition({zywork.beanNameLowerCase}{zywork.querySuffix});
+        PagerVO pagerVO = BeanUtils.copy(pagerDTO, PagerVO.class);
+        pagerVO.setRows(BeanUtils.copyList(pagerDTO.getRows(), {zywork.beanName}{zywork.voSuffix}.class));
+        return ResponseStatusVO.ok("查询成功", pagerVO);
+    }
+
     @PostMapping("admin/pager-cond")
     public ResponseStatusVO listPageByCondition(@RequestBody {zywork.beanName}{zywork.querySuffix} {zywork.beanNameLowerCase}{zywork.querySuffix}) {
         PagerDTO pagerDTO = {zywork.beanNameLowerCase}{zywork.serviceSuffix}.listPageByCondition({zywork.beanNameLowerCase}{zywork.querySuffix});
