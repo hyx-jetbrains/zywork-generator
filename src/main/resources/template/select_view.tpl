@@ -49,8 +49,7 @@
         urls: {
           searchUrl: '/{zywork.mappingUrl}/admin/pager-cond',
           allUrl: '/{zywork.mappingUrl}/admin/all',
-          detailUrl: '/{zywork.mappingUrl}/admin/one/',
-          multiUrl: '/{zywork.mappingUrl}/admin/multi/'
+          detailUrl: '/{zywork.mappingUrl}/admin/one/'
         },
         page: {
           total: 0
