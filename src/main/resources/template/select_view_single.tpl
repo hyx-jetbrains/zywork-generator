@@ -24,7 +24,7 @@
       <div slot="footer">
         <Button type="text" size="large" @click="resetForm('searchForm')">清空</Button>
         <Button type="text" size="large" @click="cancelModal('search')">取消</Button>
-        <Button type="primary" size="large" @click="searchOkModal('search')">确定</Button>
+        <Button type="primary" size="large" @click="searchOkModal('search')" :loading="loading.search">确定</Button>
       </div>
     </Modal>
     <Modal v-model="modal.detail" title="详情">
@@ -45,6 +45,9 @@
           edit: false,
           search: false,
           detail: false
+        },
+        loading: {
+          search: false
         },
         urls: {
           searchUrl: '/{zywork.mappingUrl}/admin/pager-cond',
