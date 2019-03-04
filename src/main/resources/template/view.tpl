@@ -246,6 +246,7 @@
       },
       searchOkModal(modal) {
         utils.cancelModal(this, modal)
+        this.searchForm.pageNo = 1
         utils.search(this)
       },
       batchOpt(itemName) {
