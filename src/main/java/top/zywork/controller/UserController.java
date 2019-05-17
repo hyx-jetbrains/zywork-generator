@@ -1,7 +1,6 @@
 package top.zywork.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +26,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController extends BaseController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("save")
     public ResponseStatusVO save(@RequestBody @Validated UserVO userVO, BindingResult bindingResult) {

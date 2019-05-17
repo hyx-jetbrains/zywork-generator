@@ -1,5 +1,10 @@
 package top.zywork.query;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -13,22 +18,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @author {zywork.author}
  * @version 1.0
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class {zywork.beanName}{zywork.suffix} extends PageQuery {
 
     private static final long serialVersionUID = {zywork.serialVersionId}L;
 
     {zywork.fields}
-    public {zywork.beanName}{zywork.suffix} () {}
-
-    public {zywork.beanName}{zywork.suffix} ({zywork.constructorParams}) {
-        {zywork.constructor}
-    }
-
-    {zywork.fieldsGetterSetter}
-    @Override
-    public String toString() {
-        return "{zywork.beanName}{zywork.suffix} {" +
-                {zywork.toString}" }";
-    }
-
 }

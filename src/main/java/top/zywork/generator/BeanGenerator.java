@@ -1,13 +1,14 @@
 package top.zywork.generator;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import top.zywork.bean.ColumnDetail;
 import top.zywork.bean.FieldDetail;
 import top.zywork.bean.Generator;
-import top.zywork.bean.TableColumn;
+import top.zywork.bean.TableColumns;
 import top.zywork.common.DateFormatUtils;
 import top.zywork.common.GeneratorUtils;
 import top.zywork.common.PropertyUtils;
+import top.zywork.constant.GeneratorConstants;
 import top.zywork.constant.TemplateConstants;
 import top.zywork.enums.DatePatternEnum;
 
@@ -15,6 +16,7 @@ import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 实体类自动生成封装类<br/>
@@ -40,10 +42,11 @@ public class BeanGenerator {
      * 生成表对应的各个bean类
      *
      * @param generator   Generator实例
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
+     * @param beanType bean类型
      */
-    public static void generateBean(Generator generator, TableColumn tableColumn, String beanType) {
-        String beanName = GeneratorUtils.tableNameToClassName(tableColumn.getTableName(), generator.getTablePrefix());
+    public static void generateBean(Generator generator, TableColumns tableColumns, String beanType) {
+        String beanName = GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix());
         String packagePath = beanPackage(generator, beanType);
         String fileContent = fileContent(generator, beanType);
         String beanSuffix = beanSuffix(generator, beanType);
@@ -52,11 +55,7 @@ public class BeanGenerator {
                 .replace(TemplateConstants.CREATE_DATE, DateFormatUtils.format(Calendar.getInstance(), DatePatternEnum.DATE.getValue()))
                 .replace(TemplateConstants.AUTHOR, generator.getAuthor())
                 .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
-        fileContent = generateFields(fileContent, tableColumn, beanType);
-        fileContent = generatorConstructorParams(fileContent);
-        fileContent = generatorConstructor(fileContent);
-        fileContent = generateGetterSetters(fileContent);
-        fileContent = generateToString(fileContent);
+        fileContent = generateFields(fileContent, tableColumns, beanType);
         GeneratorUtils.writeFile(fileContent, packagePath, beanName + beanSuffix + ".java");
     }
 
@@ -66,9 +65,10 @@ public class BeanGenerator {
      * @param generator Generator对象
      * @param primaryTable 主体表名称
      * @param columns 所有选择的表字段
-     * @param tableColumnsList 所有表信息
+     * @param tableColumnsMap 所有表信息map
+     * @param beanType bean类型
      */
-    public static void generateJoinBean(String beanName, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnsList, String beanType) {
+    public static void generateJoinBean(String beanName, Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap, String beanType) {
         String packagePath = beanPackage(generator, beanType);
         String fileContent = fileContent(generator, beanType);
         String beanSuffix = beanSuffix(generator, beanType);
@@ -78,16 +78,12 @@ public class BeanGenerator {
                 .replace(TemplateConstants.BEAN_NAME, beanName)
                 .replace(TemplateConstants.CLASS_SUFFIX, beanSuffix)
                 .replace(TemplateConstants.SERIAL_VERSION_ID, PropertyUtils.generateSerialVersionId() + "");
-        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsList, beanType);
-        fileContent = generatorJoinConstructorParams(fileContent);
-        fileContent = generatorJoinConstructor(fileContent);
-        fileContent = generateJoinGetterSetters(fileContent);
-        fileContent = generateJoinToString(fileContent);
+        fileContent = generateJoinFields(generator, fileContent, primaryTable, columns, tableColumnsMap, beanType);
         GeneratorUtils.writeFile(fileContent, packagePath, beanName + beanSuffix + ".java");
     }
 
     /**
-     * 根据bean类型产生不同的package
+     * 根据bean类型生成不同的package
      * @param generator
      * @param beanType
      * @return
@@ -138,20 +134,16 @@ public class BeanGenerator {
      * 生成表对应的所有属性
      *
      * @param fileContent 文件内容
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据字段
      * @param beanType    bean类型
      * @return 添加了所有属性的文件内容
      */
-    private static String generateFields(String fileContent, TableColumn tableColumn, String beanType) {
+    private static String generateFields(String fileContent, TableColumns tableColumns, String beanType) {
         fieldDetailList.clear();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
-        StringBuilder fields = new StringBuilder("");
-        for (ColumnDetail columnDetail : columnDetailList) {
-            String field = columnDetail.getFieldName();
-            String javaType = columnDetail.getJavaTypeName();
-            String comment = columnDetail.getComment();
-            // 生成所有bean属性
-            fields.append(field("id", comment, javaType, field, columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
+        StringBuilder fields = new StringBuilder();
+        for (ColumnDetail columnDetail : tableColumns.getColumnDetailList()) {
+            // 生成选择字段对应的属性
+            fields.append(field("id", columnDetail.getComment(), columnDetail.getJavaTypeName(), columnDetail.getFieldName(), columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
         }
         return fileContent.replace(TemplateConstants.FIELDS, fields.toString());
     }
@@ -163,44 +155,26 @@ public class BeanGenerator {
      * @param fileContent      文件内容
      * @param primaryTable     主表名称
      * @param columns          所选的字段
-     * @param tableColumnsList 所有表字段信息的列表
+     * @param tableColumnsMap 所有表字段信息的列表
      * @param beanType         bean类型
      * @return
      */
-    private static String generateJoinFields(Generator generator, String fileContent, String primaryTable, String[] columns, List<TableColumn> tableColumnsList, String beanType) {
+    private static String generateJoinFields(Generator generator, String fileContent, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap, String beanType) {
         fieldDetailList.clear();
-        StringBuilder fields = new StringBuilder("");
-        String id = StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(primaryTable,
-                generator.getTablePrefix())) + StringUtils.capitalize(PropertyUtils.columnToProperty("id"));
+        StringBuilder fields = new StringBuilder();
+        String id = StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(primaryTable, generator.getTablePrefix())) + StringUtils.capitalize(PropertyUtils.columnToProperty("id"));
         String lastTableName = null;
-        for (String column : columns) {
-            String[] tableNameAndColumn = column.split("-");
-            String tableName = tableNameAndColumn[0];
-            String columnName = tableNameAndColumn[1];
-            // 对所表字段进行循环
-            for (TableColumn tableColumns : tableColumnsList) {
-                // 如果是指定的表
-                if (tableColumns.getTableName().equals(tableName)) {
-                    if (!tableName.equals(lastTableName)) {
-                        fields.append("//")
-                                .append(tableName)
-                                .append("表的字段对应的属性\n\t");
-                        lastTableName = tableName;
-                    }
-                    // 获取指定表的所有字段信息
-                    List<ColumnDetail> columnDetailList = tableColumns.getColumnDetails();
-                    for (ColumnDetail columnDetail : columnDetailList) {
-                        // 如果是想要查询的字段
-                        if (columnDetail.getName().equals(columnName)) {
-                            String field = StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix()))
-                                    + StringUtils.capitalize(columnDetail.getFieldName());
-                            String javaType = columnDetail.getJavaTypeName();
-                            String comment = columnDetail.getComment();
-                            fields.append(field(id, comment, javaType, field, columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
-                        }
-                    }
-                }
+        for (String tableAndColumn : columns) {
+            String[] tableNameColumn = tableAndColumn.split(GeneratorConstants.TABLE_COLUMN_SEPARATOR);
+            String tableName = tableNameColumn[0];
+            String columnName = tableNameColumn[1];
+            TableColumns tableColumns = tableColumnsMap.get(tableName);
+            if (!tableName.equals(lastTableName)) {
+                fields.append("/**\n").append("\t * ").append(tableName).append("表的字段对应的属性\n\t */\n");
+                lastTableName = tableName;
             }
+            ColumnDetail columnDetail = tableColumns.getColumnDetailMap().get(columnName);
+            fields.append(field(id, columnDetail.getComment(), columnDetail.getJavaTypeName(), columnDetail.getFieldName(), columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
         }
         return fileContent.replace(TemplateConstants.FIELDS, fields.toString());
     }
@@ -239,9 +213,7 @@ public class BeanGenerator {
      */
     private static String normalField(String title, String javaType, String fieldName) {
         StringBuilder field = new StringBuilder();
-        field.append("// ")
-                .append(title)
-                .append("\n");
+        field.append("/**\n").append("\t * ").append(title).append("\n\t */\n");
         field.append("\tprivate ")
                 .append(javaType)
                 .append(" ")
@@ -263,12 +235,10 @@ public class BeanGenerator {
      */
     private static String voField(String idField, String title, String javaType, String fieldName, int nullable, int columnSize) {
         StringBuilder field = new StringBuilder();
-        field.append("// ")
-                .append(title)
-                .append("\n");
+        field.append("/**\n").append("\t * ").append(title).append("\n\t */\n");
         if (!fieldName.equals(idField)) {
             // 需要对属性进行后台验证，但是不包括id属性
-            if (javaType.equals("String") && nullable == DatabaseMetaData.columnNoNulls) {
+            if ("String".equals(javaType) && nullable == DatabaseMetaData.columnNoNulls) {
                 // 字符串且不能为空
                 field.append("\t@NotBlank(message = \"此项是必须项\")\n")
                         .append("\t@Size(min = 1, max = ")
@@ -276,21 +246,21 @@ public class BeanGenerator {
                         .append(", message = \"必须是1-")
                         .append(columnSize)
                         .append("个字符\")\n");
-            } else if (javaType.equals("String") && nullable == DatabaseMetaData.columnNullable) {
+            } else if ("String".equals(javaType) && nullable == DatabaseMetaData.columnNullable) {
                 // 字符串能为空，但是有最大限制
                 field.append("\t@Size(min = 0, max = ")
                         .append(columnSize)
                         .append(", message = \"必须小于")
                         .append(columnSize)
                         .append("个字符\")\n");
-            } else if (!javaType.equals("String") && !javaType.equals("Date") && nullable == DatabaseMetaData.columnNoNulls) {
+            } else if (!"String".equals(javaType) && !"Date".equals(javaType) && nullable == DatabaseMetaData.columnNoNulls) {
                 // 其他非字符串及时间类型且不能为空
                 field.append("\t@NotNull(message = \"此项是必须项\")\n");
-            } else if (javaType.equals("Date") && nullable == DatabaseMetaData.columnNoNulls) {
+            } else if ("Date".equals(javaType) && nullable == DatabaseMetaData.columnNoNulls) {
                 // 时间类型，且不能为空
                 field.append("\t@NotNull(message = \"此项是必须项\")\n")
                         .append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
-            } else if (javaType.equals("Date") && nullable == DatabaseMetaData.columnNullable) {
+            } else if ("Date".equals(javaType) && nullable == DatabaseMetaData.columnNullable) {
                 // 时间类型，能为空
                 field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             }
@@ -313,10 +283,8 @@ public class BeanGenerator {
      */
     private static String queryField(String title, String javaType, String fieldName) {
         StringBuilder field = new StringBuilder();
-        field.append("// ")
-                .append(title)
-                .append("\n");
-        if (javaType.equals("Date")) {
+        field.append("/**\n").append("\t * ").append(title).append("\n\t */\n");
+        if ("Date".equals(javaType)) {
             // 把接收的字符串时间转化成Date
             field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
         }
@@ -325,14 +293,11 @@ public class BeanGenerator {
                 .append(" ")
                 .append(fieldName)
                 .append(";\n\t");
-        if (!javaType.equals("String")) {
+        if (!"String".equals(javaType)) {
             fieldDetailList.add(new FieldDetail(fieldName + "Min", javaType, title + "（最小值）"));
             fieldDetailList.add(new FieldDetail(fieldName + "Max", javaType, title + "（最大值）"));
-            field.append("// ")
-                    .append(title)
-                    .append("（最小值）")
-                    .append("\n");
-            if (javaType.equals("Date")) {
+            field.append("/**\n").append("\t * ").append(title).append("(最小值)").append("\n\t */\n");
+            if ("Date".equals(javaType)) {
                 field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             }
             field.append("\tprivate ")
@@ -341,11 +306,8 @@ public class BeanGenerator {
                     .append(fieldName)
                     .append("Min")
                     .append(";\n\t");
-            field.append("// ")
-                    .append(title)
-                    .append("（最大值）")
-                    .append("\n");
-            if (javaType.equals("Date")) {
+            field.append("/**\n").append("\t * ").append(title).append("(最大值)").append("\n\t */\n");
+            if ("Date".equals(javaType)) {
                 field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             }
             field.append("\tprivate ")
@@ -356,136 +318,6 @@ public class BeanGenerator {
                     .append(";\n\t");
         }
         return field.toString();
-    }
-
-    /**
-     * 生成有参构造方法的所有参数
-     *
-     * @param fileContent 文件内容
-     * @return 添加了有参构造方法的参数的文件内容
-     */
-    private static String generatorConstructorParams(String fileContent) {
-        StringBuilder constructorParams = new StringBuilder("");
-        // 直接使用之前生成的所有属性列表fieldDetailList
-        for (FieldDetail fieldDetail : fieldDetailList) {
-            constructorParams.append(", ")
-                    .append(fieldDetail.getJavaType())
-                    .append(" ")
-                    .append(fieldDetail.getName());
-        }
-        return fileContent.replace(TemplateConstants.CONSTRUCTOR_PARAMS, constructorParams.toString().replaceFirst(", ", ""));
-    }
-
-    /**
-     * 生成关联表的构造方法的所有参数
-     *
-     * @param fileContent 文件内容
-     * @return
-     */
-    private static String generatorJoinConstructorParams(String fileContent) {
-        return generatorConstructorParams(fileContent);
-    }
-
-    /**
-     * 生成有参构造方法体
-     *
-     * @param fileContent 文件内容
-     * @return 添加了有参构造方法体的文件内容
-     */
-    private static String generatorConstructor(String fileContent) {
-        StringBuilder constructor = new StringBuilder("");
-        // 直接使用之前生成的所有属性列表fieldDetailList
-        for (FieldDetail fieldDetail : fieldDetailList) {
-            String field = fieldDetail.getName();
-            constructor.append("this.")
-                    .append(field)
-                    .append(" = ").append(field).append(";\n\t\t");
-        }
-        return fileContent.replace(TemplateConstants.CONSTRUCTOR, constructor.toString());
-    }
-
-    /**
-     * 生成关联表对象的构造方法
-     *
-     * @param fileContent 文件内容
-     * @return
-     */
-    private static String generatorJoinConstructor(String fileContent) {
-        return generatorConstructor(fileContent);
-    }
-
-    /**
-     * 生成所有属性的getter/setter方法
-     *
-     * @param fileContent 文件内容
-     * @return 添加了所有属性的getter/setter方法的文件内容
-     */
-    private static String generateGetterSetters(String fileContent) {
-        StringBuilder getterSetters = new StringBuilder("");
-        // 直接使用之前生成的所有属性列表fieldDetailList
-        for (FieldDetail fieldDetail : fieldDetailList) {
-            String field = fieldDetail.getName();
-            String javaType = fieldDetail.getJavaType();
-            getterSetters.append("public ")
-                    .append(javaType)
-                    .append(" ")
-                    .append(PropertyUtils.getter(field))
-                    .append("()")
-                    .append(" {\n")
-                    .append("\t\treturn ")
-                    .append(field)
-                    .append(";\n")
-                    .append("\t}\n\n")
-                    .append("\tpublic void ")
-                    .append(PropertyUtils.setter(field))
-                    .append("(")
-                    .append(javaType)
-                    .append(" ")
-                    .append(field)
-                    .append(") {\n")
-                    .append("\t\tthis.")
-                    .append(field)
-                    .append(" = ")
-                    .append(field)
-                    .append(";\n")
-                    .append("\t}\n\n\t");
-        }
-        return fileContent.replace(TemplateConstants.FIELDS_GETTER_SETTER, getterSetters.toString());
-    }
-
-    /**
-     * 生成关联表对象的getter/setter
-     *
-     * @param fileContent 文件内容
-     * @return
-     */
-    private static String generateJoinGetterSetters(String fileContent) {
-        return generateGetterSetters(fileContent);
-    }
-
-    /**
-     * 生成toString方法
-     *
-     * @param fileContent 文件内容
-     * @return 添加了toString方法的文件内容
-     */
-    private static String generateToString(String fileContent) {
-        StringBuilder toString = new StringBuilder("");
-        for (FieldDetail fieldDetail : fieldDetailList) {
-            String field = fieldDetail.getName();
-            toString.append("\", ").append(field).append(" = \" + ").append(field).append(" + ").append("\n\t\t\t\t");
-        }
-        return fileContent.replace(TemplateConstants.TO_STRING, toString.toString().replaceFirst(", ", ""));
-    }
-
-    /**
-     * 生成关联表对象的toString方法
-     *
-     * @param fileContent 文件内容
-     * @return
-     */
-    private static String generateJoinToString(String fileContent) {
-        return generateToString(fileContent);
     }
 
 }

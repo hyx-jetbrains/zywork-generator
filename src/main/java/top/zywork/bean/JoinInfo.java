@@ -1,5 +1,10 @@
 package top.zywork.bean;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 关联表代码生成时所需要的信息<br/>
  *
@@ -8,68 +13,44 @@ package top.zywork.bean;
  * @author 王振宇
  * @version 1.0
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JoinInfo {
+
+    /**
+     * bean名称
+     */
     private String beanName;
+    /**
+     * request url mapping
+     */
     private String requestMapping;
+    /**
+     * 选中的数据表名称
+     */
     private String[] tables;
+    /**
+     * 选择的主表名称
+     */
     private String primaryTable;
+    /**
+     * where 条件关联语句
+     */
     private String whereClause;
+    /**
+     * 选中的数据表字段，组合方式为:表名称::字段名称，如t_user::user_id
+     */
     private String[] columns;
+    /**
+     * 需要生成的代码类型
+     */
     private String[] codeTypes;
 
-    public String getBeanName() {
-        return beanName;
-    }
+    /**
+     * 覆盖已经生成的代码
+     */
+    private String overrideCodes;
 
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
-
-    public String getRequestMapping() {
-        return requestMapping;
-    }
-
-    public void setRequestMapping(String requestMapping) {
-        this.requestMapping = requestMapping;
-    }
-
-    public String[] getTables() {
-        return tables;
-    }
-
-    public void setTables(String[] tables) {
-        this.tables = tables;
-    }
-
-    public String getPrimaryTable() {
-        return primaryTable;
-    }
-
-    public void setPrimaryTable(String primaryTable) {
-        this.primaryTable = primaryTable;
-    }
-
-    public String getWhereClause() {
-        return whereClause;
-    }
-
-    public void setWhereClause(String whereClause) {
-        this.whereClause = whereClause;
-    }
-
-    public String[] getColumns() {
-        return columns;
-    }
-
-    public void setColumns(String[] columns) {
-        this.columns = columns;
-    }
-
-    public String[] getCodeTypes() {
-        return codeTypes;
-    }
-
-    public void setCodeTypes(String[] codeTypes) {
-        this.codeTypes = codeTypes;
-    }
 }

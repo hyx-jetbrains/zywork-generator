@@ -1,12 +1,12 @@
 package top.zywork.generator;
 
-
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import top.zywork.bean.ColumnDetail;
 import top.zywork.bean.Generator;
-import top.zywork.bean.TableColumn;
+import top.zywork.bean.TableColumns;
 import top.zywork.common.GeneratorUtils;
 import top.zywork.common.PropertyUtils;
+import top.zywork.constant.GeneratorConstants;
 import top.zywork.constant.TemplateConstants;
 
 import java.util.List;
@@ -26,26 +26,26 @@ public class MapperGenerator {
     /**
      * 生成Mapper映射xml文件
      * @param generator
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
      */
-    public static void generateMapper(Generator generator, TableColumn tableColumn) {
-        String beanName = GeneratorUtils.tableNameToClassName(tableColumn.getTableName(), generator.getTablePrefix());
+    public static void generateMapper(Generator generator, TableColumns tableColumns) {
+        String beanName = GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix());
         String resDir = GeneratorUtils.createResDir(generator, generator.getMapperDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.MAPPER_TEMPLATE);
         fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, StringUtils.uncapitalize(beanName))
                 .replace(TemplateConstants.DAO_SUFFIX, generator.getDaoSuffix())
                 .replace(TemplateConstants.DO_SUFFIX, generator.getDoSuffix())
-                .replace(TemplateConstants.TABLE_NAME, tableColumn.getTableName())
-                .replace(TemplateConstants.ID_TYPE, getIdType(tableColumn));
-        fileContent = generateInsertColumns(fileContent, tableColumn, false);
-        fileContent = generateInsertColumns(fileContent, tableColumn, true);
-        fileContent = generateInsertValues(fileContent, tableColumn, false);
-        fileContent = generateInsertValues(fileContent, tableColumn, true);
-        fileContent = generateSetClause(fileContent, tableColumn, false);
-        fileContent = generateSetClause(fileContent, tableColumn, true);
-        fileContent = generateSelectColumns(fileContent, tableColumn);
-        fileContent = generateQueryWhereClause(fileContent, tableColumn);
+                .replace(TemplateConstants.TABLE_NAME, tableColumns.getTableName())
+                .replace(TemplateConstants.ID_TYPE, getIdType(tableColumns));
+        fileContent = generateInsertColumns(fileContent, tableColumns, false);
+        fileContent = generateInsertColumns(fileContent, tableColumns, true);
+        fileContent = generateInsertValues(fileContent, tableColumns, false);
+        fileContent = generateInsertValues(fileContent, tableColumns, true);
+        fileContent = generateSetClause(fileContent, tableColumns, false);
+        fileContent = generateSetClause(fileContent, tableColumns, true);
+        fileContent = generateSelectColumns(fileContent, tableColumns);
+        fileContent = generateQueryWhereClause(fileContent, tableColumns);
         GeneratorUtils.writeFile(fileContent, resDir, beanName + generator.getMapperSuffix() + ".xml");
     }
 
@@ -76,26 +76,25 @@ public class MapperGenerator {
         GeneratorUtils.writeFile(fileContent, resDir, beanName + generator.getMapperSuffix() + ".xml");
     }
 
-    private static String getIdType(TableColumn tableColumn) {
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
-        for (ColumnDetail columnDetail : columnDetailList) {
-            if (ID_FIELD.equals(columnDetail.getName())) {
-                return columnDetail.getJavaTypeName();
-            }
-        }
-        return "Long";
+    /**
+     * 获取数据表id字段的类型
+     * @param tableColumns
+     * @return
+     */
+    private static String getIdType(TableColumns tableColumns) {
+        return tableColumns.getColumnDetailMap().get(ID_FIELD).getJavaTypeName();
     }
 
     /**
      * 生成Mapper映射文件insert语句中的column部分
      * @param fileContent 文件内容
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
      * @param isBatch 是否批量插入
      * @return 添加了insert语句的文件内容
      */
-    private static String generateInsertColumns(String fileContent, TableColumn tableColumn, boolean isBatch) {
-        List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
-        StringBuilder insertColumns = new StringBuilder("");
+    private static String generateInsertColumns(String fileContent, TableColumns tableColumns, boolean isBatch) {
+        List<ColumnDetail> columnDetails = tableColumns.getColumnDetailList();
+        StringBuilder insertColumns = new StringBuilder();
         for (ColumnDetail columnDetail : columnDetails) {
             if (!ID_FIELD.equals(columnDetail.getName())) {
                 insertColumns.append(insertColumn(columnDetail.getFieldName(), columnDetail.getName(), isBatch));
@@ -127,12 +126,12 @@ public class MapperGenerator {
     /**
      * 生成Mapper映射文件insert语句中的值部分
      * @param fileContent 文件内容
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
      * @return 添加了insert语句的文件内容
      */
-    private static String generateInsertValues(String fileContent, TableColumn tableColumn, boolean isBatch){
-        List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
-        StringBuilder insertValues = new StringBuilder("");
+    private static String generateInsertValues(String fileContent, TableColumns tableColumns, boolean isBatch){
+        List<ColumnDetail> columnDetails = tableColumns.getColumnDetailList();
+        StringBuilder insertValues = new StringBuilder();
         for (ColumnDetail columnDetail : columnDetails) {
             if (!ID_FIELD.equals(columnDetail.getName())) {
                 insertValues.append(insertValue(columnDetail.getFieldName(), isBatch));
@@ -168,13 +167,13 @@ public class MapperGenerator {
     /**
      * 生成Mapper映射文件update语句的set部分
      * @param fileContent 文件内容
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
      * @param isBatch 是否批量更新
      * @return 添加了update语句的文件内容
      */
-    private static String generateSetClause(String fileContent, TableColumn tableColumn, boolean isBatch){
-        List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
-        StringBuilder setClause = new StringBuilder("");
+    private static String generateSetClause(String fileContent, TableColumns tableColumns, boolean isBatch){
+        List<ColumnDetail> columnDetails = tableColumns.getColumnDetailList();
+        StringBuilder setClause = new StringBuilder();
         for (ColumnDetail columnDetail : columnDetails) {
             String column = columnDetail.getName();
             if (!ID_FIELD.equals(column)) {
@@ -215,18 +214,23 @@ public class MapperGenerator {
     /**
      * 生成Mapper映射文件select字段部分
      * @param fileContent 文件内容
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
      * @return 添加了select通用字段部分的文件内容
      */
-    private static String generateSelectColumns(String fileContent, TableColumn tableColumn){
-        List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
-        StringBuilder selectColumns = new StringBuilder("");
+    private static String generateSelectColumns(String fileContent, TableColumns tableColumns){
+        List<ColumnDetail> columnDetails = tableColumns.getColumnDetailList();
+        StringBuilder selectColumns = new StringBuilder();
+        int count = 0;
         for (ColumnDetail columnDetail : columnDetails) {
             String columnName = columnDetail.getName();
             selectColumns.append(", ")
                     .append(columnName)
                     .append(" as ")
                     .append(PropertyUtils.columnToProperty(columnName));
+            count++;
+            if (count % 10 == 0) {
+                selectColumns.append("\n\t\t");
+            }
         }
         return fileContent.replace(TemplateConstants.SELECT_COLUMNS, selectColumns.toString().replaceFirst(", ", ""));
     }
@@ -238,16 +242,19 @@ public class MapperGenerator {
      * @return
      */
     private static String generateJoinSelectColumns(String fileContent, Generator generator, String[] columns){
-        StringBuilder selectColumns = new StringBuilder("");
+        StringBuilder selectColumns = new StringBuilder();
+        int count = 0;
         for (String column : columns) {
-            String[] tableNameAndColumn = column.split("-");
+            String[] tableNameAndColumn = column.split(GeneratorConstants.TABLE_COLUMN_SEPARATOR);
             String tableName = tableNameAndColumn[0];
             String columnName = tableNameAndColumn[1];
-            selectColumns.append(", ")
-                    .append(tableName + "." + columnName)
-                    .append(" as ")
-                    .append(StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix()))
-                    + StringUtils.capitalize(PropertyUtils.columnToProperty(columnName)));
+            selectColumns.append(", ").append(tableName).append(".").append(columnName)
+                    .append(" as ").append(StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix())))
+                    .append(StringUtils.capitalize(PropertyUtils.columnToProperty(columnName)));
+            count++;
+            if (count % 5 == 0) {
+                selectColumns.append("\n\t\t");
+            }
         }
         return fileContent.replace(TemplateConstants.SELECT_COLUMNS, selectColumns.toString().replaceFirst(", ", ""));
     }
@@ -255,12 +262,12 @@ public class MapperGenerator {
     /**
      * 生成Mapper映射文件查询语句where部分的内容
      * @param fileContent 文件内容
-     * @param tableColumn 表数据
+     * @param tableColumns 表数据
      * @return 添加了查询语句where部分内容的文件内容
      */
-    private static String generateQueryWhereClause(String fileContent, TableColumn tableColumn){
-        List<ColumnDetail> columnDetails = tableColumn.getColumnDetails();
-        StringBuilder whereClause = new StringBuilder("");
+    private static String generateQueryWhereClause(String fileContent, TableColumns tableColumns){
+        List<ColumnDetail> columnDetails = tableColumns.getColumnDetailList();
+        StringBuilder whereClause = new StringBuilder();
         for (ColumnDetail columnDetail : columnDetails) {
             whereClause(whereClause, columnDetail.getFieldName(), columnDetail.getName(), columnDetail.getJavaTypeName());
         }
@@ -275,9 +282,9 @@ public class MapperGenerator {
      * @return
      */
     private static String generateJoinQueryWhereClause(Generator generator, String fileContent, String[] columns){
-        StringBuilder whereClause = new StringBuilder("");
+        StringBuilder whereClause = new StringBuilder();
         for (String column : columns) {
-            String[] tableNameAndColumn = column.split("-");
+            String[] tableNameAndColumn = column.split(GeneratorConstants.TABLE_COLUMN_SEPARATOR);
             String tableName = tableNameAndColumn[0];
             String columnName = tableNameAndColumn[1];
             String javaType = tableNameAndColumn[2];
@@ -297,7 +304,7 @@ public class MapperGenerator {
      * @param javaType
      */
     private static void whereClause(StringBuilder whereClause, String field, String column, String javaType) {
-        if (javaType.equals("String")) {
+        if ("String".equals(javaType)) {
             // 字符串的模糊搜索
             whereClause.append("<if test=\"query != null and query.")
                     .append(field).append(" != null and query.").append(field).append(" != ''\">\n\t\t\t");

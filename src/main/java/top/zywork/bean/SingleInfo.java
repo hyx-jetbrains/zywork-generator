@@ -1,5 +1,10 @@
 package top.zywork.bean;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 /**
  * 单表代码生成时所需要的信息<br/>
  *
@@ -8,23 +13,19 @@ package top.zywork.bean;
  * @author 王振宇
  * @version 1.0
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SingleInfo {
+
+    /**
+     * 选中的表名称
+     */
     private String[] tables;
+    /**
+     * 需要生成的代码类型
+     */
     private String[] codeTypes;
 
-    public String[] getTables() {
-        return tables;
-    }
-
-    public void setTables(String[] tables) {
-        this.tables = tables;
-    }
-
-    public String[] getCodeTypes() {
-        return codeTypes;
-    }
-
-    public void setCodeTypes(String[] codeTypes) {
-        this.codeTypes = codeTypes;
-    }
 }

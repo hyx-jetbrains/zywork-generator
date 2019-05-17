@@ -21,25 +21,36 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<zywork-common.version>1.0.0</zywork-common.version>
+		<lombok.version>1.18.8</lombok.version>
+		<commons-io.version>2.6</commons-io.version>
+		<mysql-connector.version>8.0.12</mysql-connector.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>top.zywork</groupId>
 			<artifactId>zywork-common</artifactId>
-			<version>1.0.0</version>
+			<version>${zywork-common.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
+			<version>${commons-io.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.12</version>
+			<version>${mysql-connector.version}</version>
 		</dependency>
 
 		<dependency>

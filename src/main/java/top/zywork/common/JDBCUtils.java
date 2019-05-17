@@ -1,13 +1,14 @@
 package top.zywork.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import top.zywork.bean.ColumnDetail;
-import top.zywork.bean.TableColumn;
+import top.zywork.bean.TableColumns;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * JDBC元数据工具类<br/>
@@ -17,9 +18,8 @@ import java.util.List;
  * @author 王振宇
  * @version 1.0
  */
+@Slf4j
 public class JDBCUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(JDBCUtils.class);
 
     private Connection connection;
 
@@ -37,44 +37,36 @@ public class JDBCUtils {
             this.connection = DriverManager.getConnection(url, username, password);
             return true;
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return false;
         }
     }
 
     /**
      * 获取所有表的表名和字段信息
-     * @return 表的表名和字段信息组成的对象的List集合
+     * @return 表的表名和字段信息组成的对象的Map集合，key为表名称
      */
-    public List<TableColumn> getTableColumns() {
-        List<TableColumn> tableColumnList = new ArrayList<>();
-        ResultSet tableResultSet = null;
+    public Map<String, TableColumns> getTableColumns() {
+        Map<String, TableColumns> tableColumnsMap = new HashMap<>(10);
         try {
             // 获取连接元信息
             DatabaseMetaData metaData = connection.getMetaData();
-            // 根据元信息获取所有数据表
-            tableResultSet = metaData.getTables(connection.getCatalog(), null, null, new String[] {"TABLE"});
-            // 对所有数据表进行循环，获取每一个表中的所有字段信息
-            while (tableResultSet.next()) {
-                TableColumn tableColumn = new TableColumn();
-                tableColumn.setTableName(tableResultSet.getString("TABLE_NAME"));
-                List<ColumnDetail> columnDetails = getColumnDetails(tableColumn.getTableName());
-                tableColumn.setColumnDetails(columnDetails);
-                tableColumnList.add(tableColumn);
+            try (
+                    // 根据元信息获取所有数据表结果集
+                    ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), null, null, new String[] {"TABLE"})
+            ) {
+                // 对所有数据表结果集进行循环，获取每一个表中的所有字段信息
+                while (tableResultSet.next()) {
+                    TableColumns tableColumns = new TableColumns();
+                    tableColumns.setTableName(tableResultSet.getString("TABLE_NAME"));
+                    getColumnDetails(metaData, tableColumns.getTableName(), tableColumns);
+                    tableColumnsMap.put(tableColumns.getTableName(), tableColumns);
+                }
             }
         } catch (SQLException e) {
-            logger.error(e.getMessage());
-        } finally {
-            try {
-                if (tableResultSet != null && !tableResultSet.isClosed()) {
-                    tableResultSet.close();
-                }
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
-
+            log.error("get table data error, {}", e.getMessage());
         }
-        return tableColumnList;
+        return tableColumnsMap;
     }
 
     /**
@@ -83,38 +75,29 @@ public class JDBCUtils {
      */
     public List<String> getTableNames() {
         List<String> tableNames = new ArrayList<>();
-        ResultSet tableResultSet = null;
         try {
             DatabaseMetaData metaData = connection.getMetaData();
-            tableResultSet = metaData.getTables(connection.getCatalog(), null, null, new String[] {"TABLE"});
-            while (tableResultSet.next()) {
-                tableNames.add(tableResultSet.getString("TABLE_NAME"));
+            try (ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), null, null, new String[] {"TABLE"})) {
+                while (tableResultSet.next()) {
+                    tableNames.add(tableResultSet.getString("TABLE_NAME"));
+                }
             }
         } catch (SQLException e) {
-            logger.error(e.getMessage());
-        } finally {
-            try {
-                if (tableResultSet != null && !tableResultSet.isClosed()) {
-                    tableResultSet.close();
-                }
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
+            log.error("get table data error, {}", e.getMessage());
         }
         return tableNames;
     }
 
     /**
      * 从指定的数据表获取所有的列
+     * @param metaData 数据库元数据
      * @param table 表名
      * @return 表的字段封装的信息
      */
-    public List<ColumnDetail> getColumnDetails(String table) {
-        List<ColumnDetail> columnDetails = new ArrayList<>();
-        ResultSet columnResultSet = null;
-        try {
-            DatabaseMetaData metaData = connection.getMetaData();
-            columnResultSet = metaData.getColumns(connection.getCatalog(), getSchema(), table, "%");
+    public void getColumnDetails(DatabaseMetaData metaData, String table, TableColumns tableColumns) {
+        Map<String, ColumnDetail> columnDetailMap = new HashMap<>(10);
+        List<ColumnDetail>  columnDetailList = new ArrayList<>();
+        try (ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), getSchema(), table, "%")) {
             while (columnResultSet.next()) {
                 ColumnDetail columnDetail = new ColumnDetail();
                 columnDetail.setName(columnResultSet.getString("COLUMN_NAME"));
@@ -125,20 +108,14 @@ public class JDBCUtils {
                 columnDetail.setFieldName(PropertyUtils.columnToProperty(columnDetail.getName()));
                 columnDetail.setColumnSize(columnResultSet.getInt("COLUMN_SIZE"));
                 columnDetail.setNullable(columnResultSet.getInt("NULLABLE"));
-                columnDetails.add(columnDetail);
+                columnDetailMap.put(columnDetail.getName(), columnDetail);
+                columnDetailList.add(columnDetail);
             }
+            tableColumns.setColumnDetailMap(columnDetailMap);
+            tableColumns.setColumnDetailList(columnDetailList);
         } catch (SQLException e) {
-            logger.error(e.getMessage());
-        } finally {
-            try {
-                if (columnResultSet != null && !columnResultSet.isClosed()) {
-                    columnResultSet.close();
-                }
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
+            log.error("get columns error: {}", e.getMessage());
         }
-        return columnDetails;
     }
 
     /**
@@ -149,7 +126,7 @@ public class JDBCUtils {
         try {
             return connection.getMetaData().getUserName();
         } catch (SQLException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return null;
         }
     }

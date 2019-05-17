@@ -1,5 +1,6 @@
 package top.zywork.common;
 
+import org.apache.commons.lang3.StringUtils;
 import top.zywork.bean.Generator;
 import top.zywork.constant.TemplateConstants;
 
@@ -28,8 +29,7 @@ public class GeneratorUtils {
      * 在代码保存目录中创建Java代码的基础package
      */
     public static String createBasePackage(Generator generator) {
-        String packagePath = generator.getSaveBaseDir() + File.separator + generator.getJavaSrcDir()
-                + File.separator + generator.getBasePackage();
+        String packagePath = generator.getSaveBaseDir() + File.separator + generator.getJavaSrcDir() + File.separator + generator.getBasePackage();
         return FileUtils.mkdirs(packagePath.replace(".", File.separator));
     }
 
@@ -48,8 +48,7 @@ public class GeneratorUtils {
      * @return 创建的资源目录的绝对路径
      */
     public static String createResDir(Generator generator, String resDirName) {
-        return FileUtils.mkdirs(generator.getSaveBaseDir() + File.separator
-                + generator.getResourceDir() + File.separator + resDirName);
+        return FileUtils.mkdirs(generator.getSaveBaseDir() + File.separator + generator.getResourceDir() + File.separator + resDirName);
     }
 
     /**
@@ -69,11 +68,11 @@ public class GeneratorUtils {
      * @return 表对应的实体类的类名称
      */
     public static String tableNameToClassName(String tableName, String prefix) {
-        StringBuilder className = new StringBuilder("");
+        StringBuilder className = new StringBuilder();
         String[] strArray = tableName.split("_");
         int startIndex = prefix == null ? 0 : 1;
         for (int i = startIndex, len = strArray.length; i < len; i++) {
-            className.append(org.springframework.util.StringUtils.capitalize(strArray[i]));
+            className.append(StringUtils.capitalize(strArray[i]));
         }
         return className.toString();
     }

@@ -66,20 +66,14 @@ public class TemplateConstants {
 
     public static final String SERIAL_VERSION_ID = "{zywork.serialVersionId}";
 
-    // bean对象中的属性
+    /**
+     * bean对象中的属性
+     */
     public static final String FIELDS = "{zywork.fields}";
 
-    // bean对象中的构造方法的参数列表
-    public static final String CONSTRUCTOR_PARAMS = "{zywork.constructorParams}";
-
-    // bean对象中的构造方法的方法体
-    public static final String CONSTRUCTOR = "{zywork.constructor}";
-
-    public static final String FIELDS_GETTER_SETTER = "{zywork.fieldsGetterSetter}";
-
-    public static final String TO_STRING = "{zywork.toString}";
-
-    // 如果是多表关联，则指定模块名
+    /**
+     * 如果是多表关联，则指定模块名
+     */
     public static final String MODULE_NAME = "{zywork.moduleName}";
 
     public static final String TABLE_NAME = "{zywork.tableName}";
@@ -100,12 +94,16 @@ public class TemplateConstants {
 
     public static final String SELECT_COLUMNS = "{zywork.selectColumns}";
 
-    // mapper映射中条件查询部分
+    /**
+     * mapper映射中条件查询部分
+     */
     public static final String QUERY_WHERE_CLAUSE = "{zywork.queryWhereClause}";
 
     public static final String PRIMARY_TABLE = "{zywork.primaryTable}";
 
-    // mapper映射中关联查询部分，开发者指定
+    /**
+     * mapper映射中关联查询部分，开发者指定
+     */
     public static final String JOIN_WHERE_CLAUSE = "{zywork.joinWhereClause}";
 
     public static final String FORM_ITEMS = "{zywork.formItems}";
@@ -122,10 +120,9 @@ public class TemplateConstants {
 
     public static final String SEARCH_FORM_FIELDS = "{zywork.searchFormFields}";
 
-    // view视图中的表格字段
+    /**
+     * view视图中的表格字段
+     */
     public static final String TABLE_COLUMNS = "{zywork.tableColumns}";
-
-    public static final String FIT_COLUMNS = "{zywork.fitColumns}";
-
 
 }

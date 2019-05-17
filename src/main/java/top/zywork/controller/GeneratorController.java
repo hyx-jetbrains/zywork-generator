@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.zywork.bean.Generator;
 import top.zywork.bean.JoinInfo;
 import top.zywork.bean.SingleInfo;
-import top.zywork.bean.TableColumn;
+import top.zywork.bean.TableColumns;
 import top.zywork.common.FileUtils;
 import top.zywork.generator.CodeGenerator;
 import top.zywork.vo.ResponseStatusVO;
@@ -16,6 +16,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 代码生成控制器<br/>
@@ -37,33 +38,33 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("codes")
+    @SuppressWarnings({"unchecked"})
     public ResponseStatusVO generateCodes(@RequestBody SingleInfo singleInfo, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         Generator generator = (Generator) servletContext.getAttribute("generator");
-        List<TableColumn> tableColumnList = (List<TableColumn>) servletContext.getAttribute("tableColumnList");
+        Map<String, TableColumns> tableColumnsMap = (Map<String, TableColumns>) servletContext.getAttribute(TableController.TABLE_COLUMNS_MAP);
         for (String tableName : singleInfo.getTables()) {
-            for (TableColumn tableColumn : tableColumnList) {
-                if (tableName.equals(tableColumn.getTableName())) {
-                    CodeGenerator.generateCode(generator, tableColumn, singleInfo.getCodeTypes());
-                }
-            }
+            CodeGenerator.generateCode(generator, tableColumnsMap.get(tableName), singleInfo.getCodeTypes());
         }
         return ResponseStatusVO.ok("成功生成所选表的代码！", null);
     }
 
     @PostMapping("join-code")
+    @SuppressWarnings({"unchecked"})
     public ResponseStatusVO generateJoinCode(@RequestBody JoinInfo joinInfo, HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         Generator generator = (Generator) servletContext.getAttribute("generator");
-        String dir = generator.getSaveBaseDir() + File.separator + generator.getJavaSrcDir() + File.separator
-                + generator.getBasePackage().replace(".", File.separator) + File.separator + generator.getDoPackage();
-        String fileName = joinInfo.getBeanName() + generator.getDoSuffix() + ".java";
-        if (FileUtils.exist(dir, fileName)) {
-            return ResponseStatusVO.dataError("已经存在指定名称的实体类，请重新填写实体类名称后再生成代码", null);
+        if (!"override".equals(joinInfo.getOverrideCodes())) {
+            String dir = generator.getSaveBaseDir() + File.separator + generator.getJavaSrcDir() + File.separator
+                    + generator.getBasePackage().replace(".", File.separator) + File.separator + generator.getDoPackage();
+            String fileName = joinInfo.getBeanName() + generator.getDoSuffix() + ".java";
+            if (FileUtils.exist(dir, fileName)) {
+                return ResponseStatusVO.dataError("已经存在指定名称的实体类，请重新填写实体类名称后再生成代码", null);
+            }
         }
-        List<TableColumn> tableColumnList = (List<TableColumn>) servletContext.getAttribute("tableColumnList");
+        Map<String, TableColumns> tableColumnsMap = (Map<String, TableColumns>) servletContext.getAttribute(TableController.TABLE_COLUMNS_MAP);
         CodeGenerator.generateJoinCode(joinInfo.getBeanName(), joinInfo.getRequestMapping(), generator, joinInfo.getTables(),
-                joinInfo.getPrimaryTable(), joinInfo.getColumns(), tableColumnList, joinInfo.getWhereClause(), joinInfo.getCodeTypes());
+                joinInfo.getPrimaryTable(), joinInfo.getColumns(), tableColumnsMap, joinInfo.getWhereClause(), joinInfo.getCodeTypes());
         return ResponseStatusVO.ok("成功生成所选关联表的代码！", null);
     }
 

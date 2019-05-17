@@ -2,14 +2,16 @@ package top.zywork.generator;
 
 import top.zywork.bean.ColumnDetail;
 import top.zywork.bean.Generator;
-import top.zywork.bean.TableColumn;
+import top.zywork.bean.TableColumns;
 import top.zywork.common.GeneratorUtils;
 import top.zywork.common.StringUtils;
+import top.zywork.constant.GeneratorConstants;
 import top.zywork.constant.TemplateConstants;
 
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * View视图自动生成代码封装类<br/>
@@ -24,62 +26,62 @@ public class ViewGenerator {
     /**
      * 生成单表的视图文件
      * @param generator Generator对象
-     * @param tableColumn 单表的所有字段组成的对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
      */
-    public static void generateView(Generator generator, TableColumn tableColumn) {
-        String beanName = GeneratorUtils.tableNameToClassName(tableColumn.getTableName(), generator.getTablePrefix());
-        String moduleName = GeneratorUtils.getModuleName(tableColumn.getTableName(), generator.getTablePrefix());
+    public static void generateView(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
         String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumn))
-                .replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
+        fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
+                .replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
+                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName)
                 .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
-                .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumn))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
+                .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumns))
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
     }
 
     /**
      * 生成单表的供选择的视图文件，多选
      * @param generator Generator对象
-     * @param tableColumn 单表的所有字段组成的对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
      */
-    public static void generateSelectView(Generator generator, TableColumn tableColumn) {
-        String beanName = GeneratorUtils.tableNameToClassName(tableColumn.getTableName(), generator.getTablePrefix());
-        String moduleName = GeneratorUtils.getModuleName(tableColumn.getTableName(), generator.getTablePrefix());
+    public static void generateSelectView(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
         String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.SELECT_VIEW_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
+        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
+                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName + "List")
                 .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "List.vue");
     }
 
     /**
      * 生成单表的供选择的视图文件，单选
      * @param generator Generator对象
-     * @param tableColumn 单表的所有字段组成的对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
      */
-    public static void generateSelectViewSingle(Generator generator, TableColumn tableColumn) {
-        String beanName = GeneratorUtils.tableNameToClassName(tableColumn.getTableName(), generator.getTablePrefix());
-        String moduleName = GeneratorUtils.getModuleName(tableColumn.getTableName(), generator.getTablePrefix());
+    public static void generateSelectViewSingle(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
         String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.SELECT_VIEW_SINGLE_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
+        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
+                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName + "ListSingle")
                 .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "ListSingle.vue");
     }
 
@@ -90,31 +92,31 @@ public class ViewGenerator {
      * @param generator Generator对象
      * @param primaryTable 主表名称
      * @param columns 所有选择的字段
-     * @param tableColumnList 数据库中所有的表信息
+     * @param tableColumnsMap 数据库中所有的表信息map
      */
-    public static void generateJoinView(String beanName, String mappingUrl, Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnList) {
+    public static void generateJoinView(String beanName, String mappingUrl, Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap) {
         String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
         String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_VIEW_TEMPLATE);
-        TableColumn tableColumn = columnsToTableColumn(generator, primaryTable, columns, tableColumnList);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumn))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumn))
+        TableColumns tableColumns = columnsToTableColumn(generator, primaryTable, columns, tableColumnsMap);
+        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
+                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
                 .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName)
                 .replace(TemplateConstants.MAPPING_URL, mappingUrl)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumn))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumn))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumn));
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
     }
 
     /**
      * 生成单表addForm和editForm部分的formItems
      * @param generator Generator对象
-     * @param tableColumn 单表的所有字段组成的对象
+     * @param tableColumns 单表的所有字段组成的对象
      * @return
      */
-    private static String generateFormItems(Generator generator, TableColumn tableColumn) {
+    private static String generateFormItems(Generator generator, TableColumns tableColumns) {
         StringBuilder formItems = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             if (!StringUtils.isInArray(generator.getExclusiveAddEditColumns().split(","), columnDetail.getName())) {
                 formItems.append(formItem(columnDetail.getComment(), columnDetail.getFieldName(), columnDetail.getJavaTypeName()));
@@ -173,12 +175,12 @@ public class ViewGenerator {
 
     /**
      * 生成searchForm的formItems
-     * @param tableColumn 所有的字段信息组成的对象
+     * @param tableColumns 所有的字段信息组成的对象
      * @return
      */
-    private static String generateSearchFormItems(TableColumn tableColumn) {
+    private static String generateSearchFormItems(TableColumns tableColumns) {
         StringBuilder formItems = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             String fieldName = columnDetail.getFieldName();
             String javaType = columnDetail.getJavaTypeName();
@@ -286,12 +288,12 @@ public class ViewGenerator {
 
     /**
      * 生成详情部分
-     * @param tableColumn 表字段信息
+     * @param tableColumns 表字段信息
      * @return
      */
-    private static String generateDetailItems(TableColumn tableColumn) {
+    private static String generateDetailItems(TableColumns tableColumns) {
         StringBuilder detailItems = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             detailItems.append("<p>")
                     .append(columnDetail.getComment())
@@ -305,12 +307,12 @@ public class ViewGenerator {
 
     /**
      * 生成addForm和editForm的所有表单属性
-     * @param tableColumn 表字段信息
+     * @param tableColumns 表字段信息
      * @return
      */
-    private static String generateFormFields(TableColumn tableColumn) {
+    private static String generateFormFields(TableColumns tableColumns) {
         StringBuilder formFields = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             formFields.append(columnDetail.getFieldName())
                     .append(": null,\n");
@@ -320,12 +322,12 @@ public class ViewGenerator {
 
     /**
      * 生成searchForm的表单属性
-     * @param tableColumn 表字段信息
+     * @param tableColumns 表字段信息
      * @return
      */
-    private static String generateSearchFormFields(TableColumn tableColumn) {
+    private static String generateSearchFormFields(TableColumns tableColumns) {
         StringBuilder formFields = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             formFields.append(columnDetail.getFieldName())
                     .append(": null,\n");
@@ -344,12 +346,12 @@ public class ViewGenerator {
     /**
      * 为addForm和editForm生成表单验证规则
      * @param generator Generator对象
-     * @param tableColumn 表字段信息
+     * @param tableColumns 表字段信息
      * @return
      */
-    private static String generateValidateRules(Generator generator, TableColumn tableColumn) {
+    private static String generateValidateRules(Generator generator, TableColumns tableColumns) {
         StringBuilder validateRules = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             if (!StringUtils.isInArray(generator.getExclusiveAddEditColumns().split(","), columnDetail.getName())) {
                 if (columnDetail.getJavaTypeName().equals("String") && columnDetail.getNullable() == DatabaseMetaData.columnNoNulls) {
@@ -394,9 +396,9 @@ public class ViewGenerator {
      * @param tableColumn 表字段信息
      * @return
      */
-    private static String generateTableColumns(TableColumn tableColumn) {
+    private static String generateTableColumns(TableColumns tableColumn) {
         StringBuilder tableColumns = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
+        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
             tableColumns.append("{")
                     .append("\ntitle: '")
@@ -412,64 +414,37 @@ public class ViewGenerator {
     }
 
     /**
-     * 生成视图中需要重新设置列宽的列字段，默认为全部字段
-     * @param tableColumn 表字段信息
-     * @return
-     */
-    private static String generateFitColumns(TableColumn tableColumn) {
-        StringBuilder fitColumns = new StringBuilder();
-        List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
-        for (ColumnDetail columnDetail : columnDetailList) {
-            fitColumns.append("'")
-                    .append(columnDetail.getFieldName())
-                    .append("',");
-        }
-        return fitColumns.toString();
-    }
-
-    /**
-     * 把用户在视图中选择的多表关联的字段信息转化成一个TableColumn对象，便于生成searchForm的formItems和formFields等
+     * 把用户在视图中选择的多表关联的字段信息转化成一个TableColumn对象，用于生成searchForm的formItems和formFields等
      * @param generator Generator对象
      * @param primaryTable 主表名称
      * @param columns 所有选择的字段
-     * @param tableColumnList 数据库中所有表信息
+     * @param tableColumnsMap 数据库中所有表信息map
      * @return
      */
-    private static TableColumn columnsToTableColumn(Generator generator, String primaryTable, String[] columns, List<TableColumn> tableColumnList) {
+    private static TableColumns columnsToTableColumn(Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap) {
         List<ColumnDetail> primaryColumnDetailList = new ArrayList<>();
         List<ColumnDetail> otherColumnDetailList = new ArrayList<>();
         for (String columnInfo : columns) {
-            String[] tableNameAndColumn = columnInfo.split("-");
+            String[] tableNameAndColumn = columnInfo.split(GeneratorConstants.TABLE_COLUMN_SEPARATOR);
             String tableName = tableNameAndColumn[0];
-            // 对数据库中所有表进行循环
-            for (TableColumn tableColumn : tableColumnList) {
-                if (tableColumn.getTableName().equals(tableName)) {
-                    // 获取表中的所有字段信息
-                    List<ColumnDetail> columnDetailList = tableColumn.getColumnDetails();
-                    String columnName = tableNameAndColumn[1];
-                    // 对表的所有字段进行循环
-                    for (ColumnDetail columnDetail : columnDetailList) {
-                        // 如果选择的字段与表中的字段匹配，则需要加入到columnDetailList中
-                        if (columnName.equals(columnDetail.getName())) {
-                            String field = org.springframework.util.StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix()))
-                                    + org.springframework.util.StringUtils.capitalize(columnDetail.getFieldName());
-                            ColumnDetail cd = new ColumnDetail();
-                            cd.setComment(columnDetail.getComment());
-                            cd.setFieldName(field);
-                            cd.setJavaTypeName(columnDetail.getJavaTypeName());
-                            if (tableName.equals(primaryTable)) {
-                                primaryColumnDetailList.add(cd);
-                            } else {
-                                otherColumnDetailList.add(cd);
-                            }
-                        }
-                    }
-                }
+            String columnName = tableNameAndColumn[1];
+            TableColumns tableColumns = tableColumnsMap.get(tableName);
+            ColumnDetail columnDetail = tableColumns.getColumnDetailMap().get(columnName);
+            String field = org.apache.commons.lang3.StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix()))
+                    + org.apache.commons.lang3.StringUtils.capitalize(columnDetail.getFieldName());
+            ColumnDetail cd = new ColumnDetail();
+            cd.setComment(columnDetail.getComment());
+            cd.setFieldName(field);
+            cd.setJavaTypeName(columnDetail.getJavaTypeName());
+            if (tableName.equals(primaryTable)) {
+                primaryColumnDetailList.add(cd);
+            } else {
+                otherColumnDetailList.add(cd);
             }
         }
-        TableColumn tableColumn = new TableColumn();
+        TableColumns tableColumns = new TableColumns();
         primaryColumnDetailList.addAll(otherColumnDetailList);
-        tableColumn.setColumnDetails(primaryColumnDetailList);
-        return tableColumn;
+        tableColumns.setColumnDetailList(primaryColumnDetailList);
+        return tableColumns;
     }
 }

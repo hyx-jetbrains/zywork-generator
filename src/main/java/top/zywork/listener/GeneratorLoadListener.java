@@ -1,5 +1,6 @@
 package top.zywork.listener;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.zywork.bean.Generator;
@@ -22,22 +23,22 @@ import javax.servlet.annotation.WebListener;
  * @version 1.0
  */
 @WebListener
+@Slf4j
 public class GeneratorLoadListener implements ServletContextListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(GeneratorLoadListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        logger.info("zywork-generator启动，开始读取JDBC和Generator默认配置……");
+        log.info("zywork-generator启动，开始读取JDBC和Generator默认配置……");
         JDBC jdbc = IOUtils.readJsonFileToObject(FileUtils.getResourcePath("classpath:/config/jdbc.json"), JDBC.class);
         Generator generator = IOUtils.readJsonFileToObject(FileUtils.getResourcePath("classpath:/config/generator.json"), Generator.class);
         ServletContext servletContext = servletContextEvent.getServletContext();
         servletContext.setAttribute("jdbc", jdbc);
         servletContext.setAttribute("generator", generator);
+        log.info("zywork-generator已启动……");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        logger.info("zywork-generator关闭……");
+        log.info("zywork-generator关闭……");
     }
 }

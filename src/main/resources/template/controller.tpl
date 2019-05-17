@@ -1,7 +1,6 @@
 package top.zywork.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.BindingResult;
@@ -30,9 +29,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/{zywork.moduleName}")
+@Slf4j
 public class {zywork.beanName}{zywork.suffix} extends BaseController {
-
-    private static final Logger logger = LoggerFactory.getLogger({zywork.beanName}{zywork.suffix}.class);
 
     private {zywork.beanName}{zywork.serviceSuffix} {zywork.beanNameLowerCase}{zywork.serviceSuffix};
 
