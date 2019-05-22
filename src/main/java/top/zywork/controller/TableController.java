@@ -42,7 +42,10 @@ public class TableController {
         ServletContext servletContext = request.getServletContext();
         JDBC jdbc = (JDBC) servletContext.getAttribute("jdbc");
         JDBCUtils jdbcUtils = new JDBCUtils();
-        jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
+        boolean isCoonected = jdbcUtils.connect(jdbc.getDriverClassName(), jdbc.getUrl(), jdbc.getUsername(), jdbc.getPassword());
+        if (!isCoonected) {
+            return ResponseStatusVO.error("数据库连接失败，请先设置连接参数", null);
+        }
         Map<String, TableColumns> tableColumnsMap = jdbcUtils.getTableColumns();
         servletContext.setAttribute(TABLE_COLUMNS_MAP, tableColumnsMap);
         // 获取key，即表名称
@@ -104,8 +107,7 @@ public class TableController {
         ServletContext servletContext = request.getServletContext();
         Object obj = servletContext.getAttribute(TABLE_COLUMNS_MAP);
         if (obj != null) {
-            Map<String, TableColumns> tableColumnsMap = (Map<String, TableColumns>) obj;
-            return tableColumnsMap;
+            return (Map<String, TableColumns>) obj;
         }
         return null;
     }

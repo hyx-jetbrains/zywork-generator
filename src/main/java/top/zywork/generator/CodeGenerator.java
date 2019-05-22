@@ -36,34 +36,33 @@ public class CodeGenerator {
         if (StringUtils.isInArray(codeTypes, "mapper")) {
             MapperGenerator.generateMapper(generator, tableColumns);
         }
-
         if (StringUtils.isInArray(codeTypes, "service")) {
             ServiceGenerator.generateService(generator, GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix()));
             ServiceGenerator.generateServiceImpl(generator, GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix()));
         }
-
         if (StringUtils.isInArray(codeTypes, "controller")) {
             ControllerGenerator.generateController(generator,
                     GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix()),
                     GeneratorUtils.getModuleName(tableColumns.getTableName(), generator.getTablePrefix()));
         }
-
+        String beanName = GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix());
+        String mappingUrl = GeneratorUtils.getModuleName(tableColumns.getTableName(), generator.getTablePrefix());
         if (StringUtils.isInArray(codeTypes, "view")) {
-            ViewGenerator.generateView(generator,
-                    GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix()),
-                    GeneratorUtils.getModuleName(tableColumns.getTableName(), generator.getTablePrefix()),
-                    tableColumns);
+            ViewGenerator.generateViewMain(generator, beanName, mappingUrl);
+            ViewGenerator.generateViewTable(generator, beanName, mappingUrl, tableColumns);
+            ViewGenerator.generateViewAddEdit(generator, beanName, mappingUrl, tableColumns);
+            ViewGenerator.generateViewDetail(generator, beanName, mappingUrl, tableColumns);
+            ViewGenerator.generateViewSearch(generator, beanName, mappingUrl, tableColumns);
         }
-
         if (StringUtils.isInArray(codeTypes, "selectView")) {
-            ViewGenerator.generateSelectView(generator,
-                    GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix()),
-                    GeneratorUtils.getModuleName(tableColumns.getTableName(), generator.getTablePrefix()),
-                    tableColumns);
-            ViewGenerator.generateSelectViewSingle(generator,
-                    GeneratorUtils.tableNameToClassName(tableColumns.getTableName(), generator.getTablePrefix()),
-                    GeneratorUtils.getModuleName(tableColumns.getTableName(), generator.getTablePrefix()),
-                    tableColumns);
+            ViewGenerator.generateViewMultiple(generator, beanName, mappingUrl);
+            ViewGenerator.generateViewTableMultiple(generator, beanName, mappingUrl, tableColumns);
+            ViewGenerator.generateViewSingle(generator, beanName, mappingUrl);
+            ViewGenerator.generateViewTableSingle(generator, beanName, mappingUrl, tableColumns);
+        }
+        if (StringUtils.isInArray(codeTypes, "showView")) {
+            ViewGenerator.generateViewShow(generator, beanName, mappingUrl);
+            ViewGenerator.generateViewTableShow(generator, beanName, mappingUrl, tableColumns);
         }
     }
 
@@ -87,14 +86,12 @@ public class CodeGenerator {
             BeanGenerator.generateJoinBean(beanName, generator, primaryTable, columns, tableColumnsMap, BeanGenerator.VO_BEAN);
             BeanGenerator.generateJoinBean(beanName, generator, primaryTable, columns, tableColumnsMap, BeanGenerator.QUERY_BEAN);
         }
-
         if (StringUtils.isInArray(codeTypes, "dao")) {
             DAOGenerator.generateJoinDAO(generator, beanName);
         }
         if (StringUtils.isInArray(codeTypes, "mapper")) {
             MapperGenerator.generateJoinMapper(beanName, generator, tables, primaryTable, columns, joinWhereClause);
         }
-
         if (StringUtils.isInArray(codeTypes, "service")) {
             ServiceGenerator.generateJoinService(generator, beanName);
             ServiceGenerator.generateJoinServiceImpl(generator, beanName);
@@ -103,7 +100,10 @@ public class CodeGenerator {
             ControllerGenerator.generateJoinController(generator, beanName, mappingUrl);
         }
         if (StringUtils.isInArray(codeTypes, "view")) {
-            ViewGenerator.generateJoinView(beanName, mappingUrl, generator, primaryTable, columns, tableColumnsMap);
+            ViewGenerator.generateJoinViewMain(beanName, mappingUrl, generator);
+            ViewGenerator.generateJoinViewTable(beanName, mappingUrl, generator, primaryTable, columns, tableColumnsMap);
+            ViewGenerator.generateJoinViewSearch(beanName, mappingUrl, generator, primaryTable, columns, tableColumnsMap);
+            ViewGenerator.generateJoinViewDetail(beanName, mappingUrl, generator, primaryTable, columns, tableColumnsMap);
         }
     }
 

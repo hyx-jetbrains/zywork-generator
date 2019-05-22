@@ -2,7 +2,6 @@ package top.zywork.generator;
 
 import org.apache.commons.lang3.StringUtils;
 import top.zywork.bean.Generator;
-import top.zywork.bean.TableColumns;
 import top.zywork.common.DateFormatUtils;
 import top.zywork.common.GeneratorUtils;
 import top.zywork.constant.TemplateConstants;

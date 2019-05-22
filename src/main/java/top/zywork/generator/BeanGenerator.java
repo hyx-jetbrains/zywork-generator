@@ -2,7 +2,6 @@ package top.zywork.generator;
 
 import org.apache.commons.lang3.StringUtils;
 import top.zywork.bean.ColumnDetail;
-import top.zywork.bean.FieldDetail;
 import top.zywork.bean.Generator;
 import top.zywork.bean.TableColumns;
 import top.zywork.common.DateFormatUtils;
@@ -13,9 +12,7 @@ import top.zywork.constant.TemplateConstants;
 import top.zywork.enums.DatePatternEnum;
 
 import java.sql.DatabaseMetaData;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,11 +29,6 @@ public class BeanGenerator {
     public static final String DTO_BEAN = "dto";
     public static final String VO_BEAN = "vo";
     public static final String QUERY_BEAN = "query";
-
-    /**
-     * 用于存储表字段对应的属性信息
-     */
-    private static List<FieldDetail> fieldDetailList = new ArrayList<>();
 
     /**
      * 生成表对应的各个bean类
@@ -139,7 +131,6 @@ public class BeanGenerator {
      * @return 添加了所有属性的文件内容
      */
     private static String generateFields(String fileContent, TableColumns tableColumns, String beanType) {
-        fieldDetailList.clear();
         StringBuilder fields = new StringBuilder();
         for (ColumnDetail columnDetail : tableColumns.getColumnDetailList()) {
             // 生成选择字段对应的属性
@@ -160,7 +151,6 @@ public class BeanGenerator {
      * @return
      */
     private static String generateJoinFields(Generator generator, String fileContent, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap, String beanType) {
-        fieldDetailList.clear();
         StringBuilder fields = new StringBuilder();
         String id = StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(primaryTable, generator.getTablePrefix())) + StringUtils.capitalize(PropertyUtils.columnToProperty("id"));
         String lastTableName = null;
@@ -170,11 +160,12 @@ public class BeanGenerator {
             String columnName = tableNameColumn[1];
             TableColumns tableColumns = tableColumnsMap.get(tableName);
             if (!tableName.equals(lastTableName)) {
-                fields.append("/**\n").append("\t * ").append(tableName).append("表的字段对应的属性\n\t */\n");
+                fields.append("/*\n").append("\t * ").append(tableName).append("表的字段对应的属性\n\t */\n\t");
                 lastTableName = tableName;
             }
             ColumnDetail columnDetail = tableColumns.getColumnDetailMap().get(columnName);
-            fields.append(field(id, columnDetail.getComment(), columnDetail.getJavaTypeName(), columnDetail.getFieldName(), columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
+            String fieldName = StringUtils.uncapitalize(GeneratorUtils.tableNameToClassName(tableName, generator.getTablePrefix())) + StringUtils.capitalize(columnDetail.getFieldName());
+            fields.append(field(id, columnDetail.getComment(), columnDetail.getJavaTypeName(), fieldName, columnDetail.getNullable(), columnDetail.getColumnSize(), beanType));
         }
         return fileContent.replace(TemplateConstants.FIELDS, fields.toString());
     }
@@ -192,7 +183,6 @@ public class BeanGenerator {
      * @return
      */
     private static String field(String idField, String title, String javaType, String fieldName, int nullable, int columnSize, String beanType) {
-        fieldDetailList.add(new FieldDetail(fieldName, javaType, title));
         if (DO_BEAN.equals(beanType) || DTO_BEAN.equals(beanType)) {
             return normalField(title, javaType, fieldName);
         } else if (VO_BEAN.equals(beanType)) {
@@ -294,8 +284,6 @@ public class BeanGenerator {
                 .append(fieldName)
                 .append(";\n\t");
         if (!"String".equals(javaType)) {
-            fieldDetailList.add(new FieldDetail(fieldName + "Min", javaType, title + "（最小值）"));
-            fieldDetailList.add(new FieldDetail(fieldName + "Max", javaType, title + "（最大值）"));
             field.append("/**\n").append("\t * ").append(title).append("(最小值)").append("\n\t */\n");
             if ("Date".equals(javaType)) {
                 field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");

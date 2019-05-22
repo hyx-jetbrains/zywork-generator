@@ -8,6 +8,7 @@ import top.zywork.common.StringUtils;
 import top.zywork.constant.GeneratorConstants;
 import top.zywork.constant.TemplateConstants;
 
+import java.io.File;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,65 +25,224 @@ import java.util.Map;
 public class ViewGenerator {
 
     /**
-     * 生成单表的视图文件
+     * 生成单表的主视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     */
+    public static void generateViewMain(Generator generator, String beanName, String moduleName) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_MAIN_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName);
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "Main.vue");
+    }
+
+    /**
+     * 生成单表的表格视图文件
      * @param generator Generator对象
      * @param beanName
      * @param moduleName
      * @param tableColumns 单表的所有字段组成的对象
      */
-    public static void generateView(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
-        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_TEMPLATE);
+    public static void generateViewTable(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_TABLE_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "TableMain.vue");
+    }
+
+    /**
+     * 生成单表的添加修改视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
+     */
+    public static void generateViewAddEdit(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_ADDEDIT_MODAL_TEMPLATE);
         fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
+                .replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
+                .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "AddEditModal.vue");
+    }
+
+    /**
+     * 生成单表的搜索视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
+     */
+    public static void generateViewSearch(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_SEARCH_MODAL_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
+                .replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "SearchModal.vue");
+    }
+
+    /**
+     * 生成单表的详情视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
+     */
+    public static void generateViewDetail(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_DETAIL_MODAL_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
+                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
+                .replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "DetailModal.vue");
+    }
+
+    /**
+     * 生成单表的供多选的主视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     */
+    public static void generateViewMultiple(Generator generator, String beanName, String moduleName) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_MAIN_MULTIPLE_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName);
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "MainMultiple.vue");
+    }
+
+    /**
+     * 生成单表的供多选的表格视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
+     */
+    public static void generateViewTableMultiple(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_TABLE_MULTIPLE_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "TableMultiple.vue");
+    }
+
+    /**
+     * 生成单表的供单选的主视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     */
+    public static void generateViewSingle(Generator generator, String beanName, String moduleName) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_MAIN_SINGLE_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName);
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "MainSingle.vue");
+    }
+
+    /**
+     * 生成单表的供单选的表格视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
+     */
+    public static void generateViewTableSingle(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_TABLE_SINGLE_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "TableSingle.vue");
+    }
+
+    /**
+     * 生成单表的供单选的主视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     */
+    public static void generateViewShow(Generator generator, String beanName, String moduleName) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_MAIN_SHOW_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName);
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "MainShow.vue");
+    }
+
+    /**
+     * 生成单表的供展示的表格视图文件
+     * @param generator Generator对象
+     * @param beanName
+     * @param moduleName
+     * @param tableColumns 单表的所有字段组成的对象
+     */
+    public static void generateViewTableShow(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + moduleName);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_TABLE_SHOW_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, moduleName)
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "TableShow.vue");
+    }
+
+    /**
+     * 生成多表关联的主视图文件
+     * @param beanName 实体类名称
+     * @param mappingUrl 映射url
+     * @param generator Generator对象
+     */
+    public static void generateJoinViewMain(String beanName, String mappingUrl, Generator generator) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + mappingUrl);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_VIEW_MAIN_TEMPLATE);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName);
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "Main.vue");
+    }
+
+    /**
+     * 生成多表关联的表视图文件
+     * @param beanName 实体类名称
+     * @param mappingUrl 映射url
+     * @param generator Generator对象
+     * @param primaryTable 主表名称
+     * @param columns 所有选择的字段
+     * @param tableColumnsMap 数据库中所有的表信息map
+     */
+    public static void generateJoinViewTable(String beanName, String mappingUrl, Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + mappingUrl);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_VIEW_TABLE_TEMPLATE);
+        TableColumns tableColumns = columnsToTableColumn(generator, primaryTable, columns, tableColumnsMap);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, mappingUrl)
+                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "Table.vue");
+    }
+
+    /**
+     * 生成多表关联的搜索视图文件
+     * @param beanName 实体类名称
+     * @param mappingUrl 映射url
+     * @param generator Generator对象
+     * @param primaryTable 主表名称
+     * @param columns 所有选择的字段
+     * @param tableColumnsMap 数据库中所有的表信息map
+     */
+    public static void generateJoinViewSearch(String beanName, String mappingUrl, Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + mappingUrl);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_SEARCH_MODAL_TEMPLATE);
+        TableColumns tableColumns = columnsToTableColumn(generator, primaryTable, columns, tableColumnsMap);
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.MAPPING_URL, mappingUrl)
                 .replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
-                .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName)
-                .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
-                .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumns))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
-        GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
-    }
-
-    /**
-     * 生成单表的供选择的视图文件，多选
-     * @param generator Generator对象
-     * @param beanName
-     * @param moduleName
-     * @param tableColumns 单表的所有字段组成的对象
-     */
-    public static void generateSelectView(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
-        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.SELECT_VIEW_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
-                .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName + "List")
-                .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
-        GeneratorUtils.writeFile(fileContent, resDir, beanName + "List.vue");
-    }
-
-    /**
-     * 生成单表的供选择的视图文件，单选
-     * @param generator Generator对象
-     * @param beanName
-     * @param moduleName
-     * @param tableColumns 单表的所有字段组成的对象
-     */
-    public static void generateSelectViewSingle(Generator generator, String beanName, String moduleName, TableColumns tableColumns) {
-        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.SELECT_VIEW_SINGLE_TEMPLATE);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
-                .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
-                .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName + "ListSingle")
-                .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
-        GeneratorUtils.writeFile(fileContent, resDir, beanName + "ListSingle.vue");
+                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "SearchModal.vue");
     }
 
     /**
@@ -94,18 +254,15 @@ public class ViewGenerator {
      * @param columns 所有选择的字段
      * @param tableColumnsMap 数据库中所有的表信息map
      */
-    public static void generateJoinView(String beanName, String mappingUrl, Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap) {
-        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir());
-        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.JOIN_VIEW_TEMPLATE);
+    public static void generateJoinViewDetail(String beanName, String mappingUrl, Generator generator, String primaryTable, String[] columns, Map<String, TableColumns> tableColumnsMap) {
+        String resDir = GeneratorUtils.createResDir(generator, generator.getViewFileDir() + File.separator + mappingUrl);
+        String fileContent = GeneratorUtils.readTemplate(generator, TemplateConstants.VIEW_DETAIL_MODAL_TEMPLATE);
         TableColumns tableColumns = columnsToTableColumn(generator, primaryTable, columns, tableColumnsMap);
-        fileContent = fileContent.replace(TemplateConstants.SEARCH_FORM_ITEMS, generateSearchFormItems(tableColumns))
+        fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
+                .replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
                 .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
-                .replace(TemplateConstants.BEAN_NAME_LOWER_CASE, beanName)
-                .replace(TemplateConstants.MAPPING_URL, mappingUrl)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
-                .replace(TemplateConstants.SEARCH_FORM_FIELDS, generateSearchFormFields(tableColumns))
-                .replace(TemplateConstants.TABLE_COLUMNS, generateTableColumns(tableColumns));
-        GeneratorUtils.writeFile(fileContent, resDir, beanName + ".vue");
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns));
+        GeneratorUtils.writeFile(fileContent, resDir, beanName + "DetailModal.vue");
     }
 
     /**
@@ -117,10 +274,15 @@ public class ViewGenerator {
     private static String generateFormItems(Generator generator, TableColumns tableColumns) {
         StringBuilder formItems = new StringBuilder();
         List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
+        int index = 0;
         for (ColumnDetail columnDetail : columnDetailList) {
             if (!StringUtils.isInArray(generator.getExclusiveAddEditColumns().split(","), columnDetail.getName())) {
-                formItems.append(formItem(columnDetail.getComment(), columnDetail.getFieldName(), columnDetail.getJavaTypeName()));
+                formItems.append(formItem(columnDetail.getComment(), columnDetail.getFieldName(), columnDetail.getJavaTypeName(), index));
+                index++;
             }
+        }
+        if (!formItems.toString().endsWith("</Row>\n")) {
+            formItems.append("\n</Row>\n");
         }
         return formItems.toString();
     }
@@ -132,9 +294,13 @@ public class ViewGenerator {
      * @param javaTypeName java类型
      * @return
      */
-    private static String formItem(String title, String fieldName, String javaTypeName) {
+    private static String formItem(String title, String fieldName, String javaTypeName, int index) {
         StringBuilder formItem = new StringBuilder();
-        formItem.append("<FormItem label=\"")
+        if (index % 2 == 0) {
+            formItem.append("<Row>\n\t");
+        }
+        formItem.append("<i-col span=\"12\">\n\t")
+                .append("<FormItem label=\"")
                 .append(title)
                 .append("\" prop=\"")
                 .append(fieldName)
@@ -169,7 +335,11 @@ public class ViewGenerator {
                         .append("\" style=\"width: 100%;\"/>");
                 break;
         }
-        formItem.append("\n</FormItem>\n");
+        formItem.append("\n</FormItem>\n\t")
+                .append("</i-col>");
+        if (index % 2 == 1) {
+            formItem.append("\n</Row>\n");
+        }
         return formItem.toString();
     }
 
@@ -181,9 +351,14 @@ public class ViewGenerator {
     private static String generateSearchFormItems(TableColumns tableColumns) {
         StringBuilder formItems = new StringBuilder();
         List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
+        int index = 0;
         for (ColumnDetail columnDetail : columnDetailList) {
             String fieldName = columnDetail.getFieldName();
             String javaType = columnDetail.getJavaTypeName();
+            if (index % 2 == 0) {
+                formItems.append("<Row>\n\t");
+            }
+            formItems.append("<i-col span=\"12\">\n\t");
             switch (javaType) {
                 case "String":
                     formItems.append("<FormItem label=\"")
@@ -281,7 +456,15 @@ public class ViewGenerator {
                             .append("\n</Row>");
                     break;
             }
-            formItems.append("\n</FormItem>\n");
+            formItems.append("\n</FormItem>\n")
+                    .append("</i-col>");
+            if (index % 2 == 1) {
+                formItems.append("\n</Row>\n");
+            }
+            index++;
+        }
+        if (!formItems.toString().endsWith("</Row>\n")) {
+            formItems.append("\n</Row>\n");
         }
         return formItems.toString();
     }
@@ -294,13 +477,27 @@ public class ViewGenerator {
     private static String generateDetailItems(TableColumns tableColumns) {
         StringBuilder detailItems = new StringBuilder();
         List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
+        int index = 0;
         for (ColumnDetail columnDetail : columnDetailList) {
-            detailItems.append("<p>")
+            if (index % 2 == 0) {
+                detailItems.append("<Row>\n\t");
+            }
+            detailItems.append("<i-col span=\"11\">")
+                    .append("<span class=\"detail-title\">")
                     .append(columnDetail.getComment())
-                    .append(": ")
-                    .append("<span v-text=\"form.")
+                    .append("：</span><span v-text=\"form.")
                     .append(columnDetail.getFieldName())
-                    .append("\"></span></p>\n");
+                    .append("\"></span></i-col>");
+            if (index % 2 == 0) {
+                detailItems.append("<i-col span=\"2\"></i-col>");
+            }
+            if (index % 2 == 1) {
+                detailItems.append("\n</Row>\n");
+            }
+            index++;
+        }
+        if (!detailItems.toString().endsWith("</Row>\n")) {
+            detailItems.append("\n</Row>\n");
         }
         return detailItems.toString();
     }
@@ -408,7 +605,32 @@ public class ViewGenerator {
                     .append(columnDetail.getFieldName())
                     .append("',")
                     .append("\nminWidth: 120,")
-                    .append("\nsortable: true\n},\n");
+                    .append("\nsortable: true,");
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(columnDetail.getCommentDetail())) {
+                tableColumns.append("\nrenderHeader: (h, params) => {\n" +
+                        "              return h('span', [\n" +
+                        "                h('span', '" + columnDetail.getComment() + "'),\n" +
+                        "                h('Tooltip', {\n" +
+                        "                  props: {\n" +
+                        "                    content: '" + columnDetail.getCommentDetail() + "',\n" +
+                        "                    placement: 'top',\n" +
+                        "                    transfer: true,\n" +
+                        "                    maxWidth: 500\n" +
+                        "                  }\n" +
+                        "                }, [\n" +
+                        "                  h('Icon', {\n" +
+                        "                    props: {\n" +
+                        "                      type: 'ios-help-circle'\n" +
+                        "                    },\n" +
+                        "                    style: {\n" +
+                        "                      marginLeft: '3px'\n" +
+                        "                    }\n" +
+                        "                  })\n" +
+                        "                ])\n" +
+                        "              ])\n" +
+                        "            }");
+            }
+            tableColumns.append("\n},\n");
         }
         return tableColumns.toString();
     }
@@ -434,6 +656,7 @@ public class ViewGenerator {
                     + org.apache.commons.lang3.StringUtils.capitalize(columnDetail.getFieldName());
             ColumnDetail cd = new ColumnDetail();
             cd.setComment(columnDetail.getComment());
+            cd.setCommentDetail(columnDetail.getCommentDetail());
             cd.setFieldName(field);
             cd.setJavaTypeName(columnDetail.getJavaTypeName());
             if (tableName.equals(primaryTable)) {

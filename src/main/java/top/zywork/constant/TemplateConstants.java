@@ -34,13 +34,31 @@ public class TemplateConstants {
 
     public static final String JOIN_MAPPER_TEMPLATE = "join_mapper.tpl";
 
-    public static final String VIEW_TEMPLATE = "view.tpl";
+    public static final String VIEW_MAIN_TEMPLATE = "view_main.tpl";
 
-    public static final String JOIN_VIEW_TEMPLATE = "join_view.tpl";
+    public static final String VIEW_TABLE_TEMPLATE = "view_table.tpl";
 
-    public static final String SELECT_VIEW_TEMPLATE = "select_view.tpl";
+    public static final String VIEW_ADDEDIT_MODAL_TEMPLATE = "view_addedit_modal.tpl";
 
-    public static final String SELECT_VIEW_SINGLE_TEMPLATE = "select_view_single.tpl";
+    public static final String VIEW_DETAIL_MODAL_TEMPLATE = "view_detail_modal.tpl";
+
+    public static final String VIEW_SEARCH_MODAL_TEMPLATE = "view_search_modal.tpl";
+
+    public static final String VIEW_MAIN_MULTIPLE_TEMPLATE = "view_main_multiple.tpl";
+
+    public static final String VIEW_TABLE_MULTIPLE_TEMPLATE = "view_table_multiple.tpl";
+
+    public static final String VIEW_MAIN_SINGLE_TEMPLATE = "view_main_single.tpl";
+
+    public static final String VIEW_TABLE_SINGLE_TEMPLATE = "view_table_single.tpl";
+
+    public static final String VIEW_MAIN_SHOW_TEMPLATE = "view_main_show.tpl";
+
+    public static final String VIEW_TABLE_SHOW_TEMPLATE = "view_table_show.tpl";
+
+    public static final String JOIN_VIEW_MAIN_TEMPLATE = "join_view_main.tpl";
+
+    public static final String JOIN_VIEW_TABLE_TEMPLATE = "join_view_table.tpl";
 
     public static final String BEAN_NAME = "{zywork.beanName}";
 

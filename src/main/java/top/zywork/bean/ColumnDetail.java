@@ -32,6 +32,10 @@ public class ColumnDetail {
      */
     private String comment;
     /**
+     * 字段注释详细说明
+     */
+    private String commentDetail;
+    /**
      * 字段的SQL类型，int
      */
     private Integer type;

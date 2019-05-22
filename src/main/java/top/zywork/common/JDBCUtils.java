@@ -1,6 +1,7 @@
 package top.zywork.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import top.zywork.bean.ColumnDetail;
 import top.zywork.bean.TableColumns;
 
@@ -23,6 +24,8 @@ public class JDBCUtils {
 
     private Connection connection;
 
+    private static final String COMMENT_SEPARATOR = "#";
+
     /**
      * 连接数据库
      * @param driverClassName 驱动程序
@@ -37,7 +40,7 @@ public class JDBCUtils {
             this.connection = DriverManager.getConnection(url, username, password);
             return true;
         } catch (ClassNotFoundException | SQLException e) {
-            log.error(e.getMessage());
+            log.error("connect to database error: {}" ,e.getMessage());
             return false;
         }
     }
@@ -104,7 +107,14 @@ public class JDBCUtils {
                 columnDetail.setType(columnResultSet.getInt("DATA_TYPE"));
                 columnDetail.setJdbcTypeName(columnResultSet.getString("TYPE_NAME"));
                 columnDetail.setJavaTypeName(getJavaType(columnDetail.getJdbcTypeName()));
-                columnDetail.setComment(columnResultSet.getString("REMARKS"));
+                String comment = columnResultSet.getString("REMARKS");
+                if (StringUtils.isNotEmpty(comment) && comment.contains(COMMENT_SEPARATOR)) {
+                    String[] commentArray = comment.split(COMMENT_SEPARATOR);
+                    columnDetail.setComment(commentArray[0]);
+                    columnDetail.setCommentDetail(commentArray[1]);
+                } else {
+                    columnDetail.setComment(comment);
+                }
                 columnDetail.setFieldName(PropertyUtils.columnToProperty(columnDetail.getName()));
                 columnDetail.setColumnSize(columnResultSet.getInt("COLUMN_SIZE"));
                 columnDetail.setNullable(columnResultSet.getInt("NULLABLE"));
