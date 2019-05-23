@@ -78,13 +78,13 @@ public class GeneratorUtils {
     }
 
     /**
-     * 通过表名称获取Controller中的模块名，如user_social_type对应于user-social-type
+     * 通过表名称获取Controller中的模块名，如t_user_social_type对应于user-social-type
      * @param tableName 表名称
      * @param prefix 表前缀
      * @return 表名称对应的Controller模块名
      */
     public static String getModuleName(String tableName, String prefix) {
-        return tableName.replace(prefix, "").replace("_", "-");
+        return tableName.replaceFirst(prefix, "").replace("_", "-");
     }
 
 }
