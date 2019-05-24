@@ -243,16 +243,9 @@ public class BeanGenerator {
                         .append(", message = \"必须小于")
                         .append(columnSize)
                         .append("个字符\")\n");
-            } else if (!"String".equals(javaType) && !"Date".equals(javaType) && nullable == DatabaseMetaData.columnNoNulls) {
+            } else if (!"String".equals(javaType) && nullable == DatabaseMetaData.columnNoNulls) {
                 // 其他非字符串及时间类型且不能为空
                 field.append("\t@NotNull(message = \"此项是必须项\")\n");
-            } else if ("Date".equals(javaType) && nullable == DatabaseMetaData.columnNoNulls) {
-                // 时间类型，且不能为空
-                field.append("\t@NotNull(message = \"此项是必须项\")\n")
-                        .append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
-            } else if ("Date".equals(javaType) && nullable == DatabaseMetaData.columnNullable) {
-                // 时间类型，能为空
-                field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
             }
         }
         field.append("\tprivate ")
@@ -274,10 +267,6 @@ public class BeanGenerator {
     private static String queryField(String title, String javaType, String fieldName) {
         StringBuilder field = new StringBuilder();
         field.append("/**\n").append("\t * ").append(title).append("\n\t */\n");
-        if ("Date".equals(javaType)) {
-            // 把接收的字符串时间转化成Date
-            field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
-        }
         field.append("\tprivate ")
                 .append(javaType)
                 .append(" ")
@@ -285,9 +274,6 @@ public class BeanGenerator {
                 .append(";\n\t");
         if (!"String".equals(javaType)) {
             field.append("/**\n").append("\t * ").append(title).append("(最小值)").append("\n\t */\n");
-            if ("Date".equals(javaType)) {
-                field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
-            }
             field.append("\tprivate ")
                     .append(javaType)
                     .append(" ")
@@ -295,9 +281,6 @@ public class BeanGenerator {
                     .append("Min")
                     .append(";\n\t");
             field.append("/**\n").append("\t * ").append(title).append("(最大值)").append("\n\t */\n");
-            if ("Date".equals(javaType)) {
-                field.append("\t@JsonFormat(pattern = \"yyyy-MM-dd HH:mm:ss\", timezone = \"GMT+8\")\n");
-            }
             field.append("\tprivate ")
                     .append(javaType)
                     .append(" ")

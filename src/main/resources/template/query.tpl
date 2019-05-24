@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 /**
  * {zywork.beanName}{zywork.suffix}查询对象类<br/>
  *
