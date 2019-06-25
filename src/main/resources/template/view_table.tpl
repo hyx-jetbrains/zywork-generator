@@ -159,15 +159,6 @@
                                                         )
                                                     ]
                                                 ),
-                                                h(
-                                                    'DropdownItem',
-                                                    {
-                                                        props: {
-                                                            name: 'role'
-                                                        }
-                                                    },
-                                                    '角色'
-                                                ),
                                             ]
                                         )
                                     ]
