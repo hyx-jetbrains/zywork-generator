@@ -2,7 +2,6 @@ package top.zywork.dao;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import top.zywork.query.PageQuery;
 
 import java.util.List;
 
