@@ -3,6 +3,7 @@ package top.zywork.query;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = true)
 public class {zywork.beanName}{zywork.suffix} extends PageQuery {
 
     private static final long serialVersionUID = {zywork.serialVersionId}L;
