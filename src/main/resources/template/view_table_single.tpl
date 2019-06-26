@@ -1,7 +1,7 @@
 <template>
     <div>
         <Table ref="dataTable" highlight-row stripe :loading="table.loading" :columns="table.tableColumns" :data="table.tableRows"
-               style="margin-top:20px;" @on-selection-change="changeSelection" @on-sort-change="changeSort"></Table>
+               style="margin-top:20px;" @on-current-change="changeCurrent" @on-sort-change="changeSort"></Table>
         <div style="margin: 20px; overflow: hidden">
             <div style="float: right;">
                 <Page :total="pager.total" :current="pager.pageNo" @on-change="changePageNo" @on-page-size-change="changePageSize"
@@ -77,7 +77,7 @@
                         }
                     ],
                     tableRows: [],
-                    selections: []
+                    currentRow: {}
                 }
             }
         },
@@ -92,8 +92,8 @@
             showDetail(row) {
                 this.$emit('showDetailModal', row)
             },
-            changeSelection(selections) {
-                utils.changeSelections(this, selections)
+            changeCurrent(currentRow, oldCurrentRow) {
+                utils.changeCurrent(this, currentRow, oldCurrentRow)
             },
             changeSort(sortColumn) {
                 utils.changeSort(this, sortColumn)
