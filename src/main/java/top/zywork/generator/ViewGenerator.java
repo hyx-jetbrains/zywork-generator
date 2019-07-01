@@ -487,7 +487,7 @@ public class ViewGenerator {
                     .append(columnDetail.getComment())
                     .append("：</span><span v-text=\"form.")
                     .append(columnDetail.getFieldName())
-                    .append("\"></span></i-col>");
+                    .append("\"></span></i-col>\n");
             if (index % 2 == 0) {
                 detailItems.append("<i-col span=\"2\"></i-col>");
             }
