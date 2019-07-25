@@ -67,7 +67,7 @@ public class ViewGenerator {
         fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
                 .replace(TemplateConstants.BEAN_NAME, beanName)
                 .replace(TemplateConstants.MAPPING_URL, moduleName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns))
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(generator, tableColumns, true))
                 .replace(TemplateConstants.FORM_VALIDATE_RULES, generateValidateRules(generator, tableColumns));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "AddEditModal.vue");
     }
@@ -102,7 +102,7 @@ public class ViewGenerator {
         fileContent = fileContent.replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
                 .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
                 .replace(TemplateConstants.BEAN_NAME, beanName)
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns));
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(generator, tableColumns, false));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "DetailModal.vue");
     }
 
@@ -261,7 +261,7 @@ public class ViewGenerator {
         fileContent = fileContent.replace(TemplateConstants.BEAN_NAME, beanName)
                 .replace(TemplateConstants.FORM_ITEMS, generateFormItems(generator, tableColumns))
                 .replace(TemplateConstants.DETAIL_ITEMS, generateDetailItems(tableColumns))
-                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(tableColumns));
+                .replace(TemplateConstants.FORM_FIELDS, generateFormFields(generator, tableColumns, false));
         GeneratorUtils.writeFile(fileContent, resDir, beanName + "DetailModal.vue");
     }
 
@@ -276,7 +276,7 @@ public class ViewGenerator {
         List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         int index = 0;
         for (ColumnDetail columnDetail : columnDetailList) {
-            if (!StringUtils.isInArray(generator.getExclusiveAddEditColumns().split(","), columnDetail.getName())) {
+            if (!generator.getExclusiveAddEditColumns().contains(columnDetail.getName())) {
                 formItems.append(formItem(columnDetail.getComment(), columnDetail.getFieldName(), columnDetail.getJavaTypeName(), index));
                 index++;
             }
@@ -504,13 +504,18 @@ public class ViewGenerator {
 
     /**
      * 生成addForm和editForm的所有表单属性
+     * @param generator
      * @param tableColumns 表字段信息
+     * @param exclusiveColumns 是否排队不需要添加和编辑的字段
      * @return
      */
-    private static String generateFormFields(TableColumns tableColumns) {
+    private static String generateFormFields(Generator generator, TableColumns tableColumns, Boolean exclusiveColumns) {
         StringBuilder formFields = new StringBuilder();
         List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         for (ColumnDetail columnDetail : columnDetailList) {
+            if (exclusiveColumns && generator.getExclusiveAddEditColumns().contains(columnDetail.getName())) {
+                continue;
+            }
             formFields.append(columnDetail.getFieldName())
                     .append(": null,\n");
         }
