@@ -276,7 +276,7 @@ public class ViewGenerator {
         List<ColumnDetail> columnDetailList = tableColumns.getColumnDetailList();
         int index = 0;
         for (ColumnDetail columnDetail : columnDetailList) {
-            if (!generator.getExclusiveAddEditColumns().contains(columnDetail.getName())) {
+            if (org.apache.commons.lang3.StringUtils.isNotEmpty(columnDetail.getName()) && !generator.getExclusiveAddEditColumns().contains(columnDetail.getName())) {
                 formItems.append(formItem(columnDetail.getComment(), columnDetail.getFieldName(), columnDetail.getJavaTypeName(), index));
                 index++;
             }
